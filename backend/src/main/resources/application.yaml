@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/cloudBalance
+    username: root
+    password: Root@123.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  security:
+    user:
+      name: "mohit"
+      password: "mohit123"
+  jwt:
+    secretKey: "$#2cloud@#$#$@^&^&#&%#@%@#$Balance$$*!%^#*O^(^%*^&$)Project"
