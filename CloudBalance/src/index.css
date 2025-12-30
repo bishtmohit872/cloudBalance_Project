@@ -8,3 +8,24 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;              /* Chrome / Safari */
 }
+
+@keyframes equalize {
+  0% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1.2); }
+  100% { transform: scaleY(0.4); }
+}
+
+
+/* global.css */
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #5b5e68; /* blue-900 */
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #e5e7eb; /* gray-200 */
+}

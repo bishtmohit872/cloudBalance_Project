@@ -9,25 +9,30 @@ const MenuList = [
         id:1,
         name:"User Management",
         logo:<LuUsers className="size-7"/>,
-        path:"user"
+        path:"user",
+        allowedRoles:["Admin","ReadOnly"]
     },
+    
     {
         id:2,
         name:"Onboarding",
         logo:<LuSquareUser className="size-7"/>,
-        path:"/onboarding"
+        path:"/onboarding",
+        allowedRoles:["Admin"]
     },
     {
         id:3,
         name:"Aws Service",
         logo:<FaAws className="size-7"/>,
-        path:"aws-cloud"
+        path:"aws-cloud",
+        allowedRoles:["Admin","ReadOnly","Customer"]
     },
     {
         id:4,
         name:"Cost Explorer",
         logo:<BsFileEarmarkBarGraph className="size-7"/>,
-        path:"cost-explorer"
+        path:"cost-explorer",
+        allowedRoles:["Admin","ReadOnly","Customer"]
     },
 ]
 

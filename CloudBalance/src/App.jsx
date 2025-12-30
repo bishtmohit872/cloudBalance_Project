@@ -10,7 +10,7 @@ function App() {
 
   useEffect(()=>{
     if(getToken()){
-      navigate("/dashboard")
+      navigate("/user")
     }
     else{
       navigate("/login")

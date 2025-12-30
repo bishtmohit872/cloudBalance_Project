@@ -26,19 +26,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddUserRequestDTO {
 
-    @Size(min=3,max=10, message = "firstName length should be between 3 and 10 characters")
+    @Size(min=3,max=10, message = "First Name length should be between 3 and 10 characters")
     private String firstName;
 
-    @Size(min=3,max=10, message = "lastName length should be between 3 and 10 characters")
+    @Size(min=3,max=10, message = "Last Name length should be between 3 and 10 characters")
     private String lastName;
 
     @Email(message="Email format is not valid")
     private String email;
 
-    @Size(min=4, message = "userName length should be between 4 and 15 characters")
+    @Size(min=4, message = "User Name length should be between 4 and 15 characters")
     private String username;
 
-    @Size(min=4, max=15, message = "password length should be between 4 and 15 atleast")
+    @Size(min=4, max=15, message = "Password length should be between 4 and 15 atleast")
     private String password;
 
     @NotNull

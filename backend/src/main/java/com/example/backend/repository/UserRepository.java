@@ -20,13 +20,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 //    @Query("SELECT u FROM UserEntity u where u.lastName = ?1")
 //    @Query(value = "select * from user_entity", nativeQuery = true) // Bydefault native query is false
 
-     @Query("SELECT u FROM UserEntity u where u.lastName = :lastName")
-    List<UserEntity> findByLastname(@Param("lastName") String lastName);
-
-     //these three annotations are required for an update okay
-     @Transactional
-     @Modifying
-     @Query("update UserEntity u set u.firstName = :name where u.id = :id")
-    void updateFirstnameWithId (@Param("name") String name ,@Param("id") Long id);
+//     @Query("SELECT u FROM UserEntity u where u.lastName = :lastName")
+//    List<UserEntity> findByLastname(@Param("lastName") String lastName);
+//
+//     //these three annotations are required for an update okay
+//     @Transactional
+//     @Modifying
+//     @Query("update UserEntity u set u.firstName = :name where u.id = :id")
+//    void updateFirstnameWithId (@Param("name") String name ,@Param("id") Long id);
 
 }

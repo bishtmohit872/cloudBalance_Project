@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { IoIosCloseCircleOutline } from "react-icons/io"
 import { useAddUser, useEditUser } from "../../../queryApi/query";
 import toast from "react-hot-toast";
+import AwsAccountList from "../../../components/AwsAccountList";
 
 const UserForm = ({ mode, show, setShow, data }) => {
 
@@ -11,6 +12,8 @@ const UserForm = ({ mode, show, setShow, data }) => {
   const [role,setRole] = useState("")
   const [username,setUsername] = useState("")
   const [password,setPassword] = useState("")
+
+  const [showAccountList,setShowAccountList] = useState(false)
 
   const { mutate: addUser , isLoading} = useAddUser();
   const { mutate: editUser } = useEditUser(); 
@@ -30,6 +33,25 @@ const UserForm = ({ mode, show, setShow, data }) => {
       setPassword("")
     }
   }, [mode, data]);
+
+  useEffect(()=>{
+    if(role==="Customer"){
+      setShowAccountList(true)
+    }
+    else{
+      setShowAccountList(false)
+    }
+  },[role])
+
+  const handleRole=(e)=>{
+    setRole(e.target.value)
+    if(e.target.value.toString()==="Customer"){
+      setShowAccountList(true)
+    }
+    else{
+      setShowAccountList(false)
+    }
+  }
 
   const handleVisiblity = (e) => {
     e.preventDefault();
@@ -75,17 +97,20 @@ const UserForm = ({ mode, show, setShow, data }) => {
 
   return (
     <>
-      {show && <div className="size-full absolute top-0 z-10 bg-gray-600 opacity-80" />}
+      {/* {show && <div className="size-full absolute top-0 z-10 bg-gray-600 opacity-80" />} */}
+      {show && <div className="h-screen w-screen absolute top-0 right-0 z-20 bg-gray-600 opacity-80" />}
 
       {show && (
-        <div className="h-max w-[800px] absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg shadow-lg transition-all duration-300 ease-out py-2 px-2 flex flex-col space-y-4 text-blue-950">
+        <div className={`h-max w-[800px] absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg shadow-lg transition-all duration-300 ease-out py-2 px-2 flex flex-col space-y-4 text-blue-950`}>
+
           <div className="w-full flex items-center justify-between">
             <p className="text-2xl font-bold">{mode === "edit" ? "Update User" : "Add New User"}</p>
-            <IoIosCloseCircleOutline className="size-8 cursor-pointer relative bottom-9 left-8 text-white" onClick={handleVisiblity} />
+            <IoIosCloseCircleOutline className="size-8 cursor-pointer relative bottom-6 left-6 text-white bg-blue-950 rounded-full" onClick={handleVisiblity} />
           </div>
 
-          <div className="w-full p-2 flex flex-col space-y-8 rounded-lg bg-gray-100 shadow-lg">
-            <div className="w-full flex items-center justify-between text-xl font-semibold">
+          <div className={`${showAccountList ? "max-h-[740px] duration-200" : "max-h-[200px] duration-500" } w-full p-2 flex flex-col space-y-8 rounded-lg bg-gray-100 shadow-lg transition-[max-height] ease-in-out`}>
+
+            <div className="w-full flex items-center justify-between text-md font-semibold">
               <div className="flex flex-col space-y-2">
                 <label htmlFor="firstName">First Name</label>
                 <input id="firstName" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={fName} onChange={(e) => setFName(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter First Name" />
@@ -97,7 +122,7 @@ const UserForm = ({ mode, show, setShow, data }) => {
               </div>
             </div>
 
-            <div className="w-full flex items-center justify-between text-xl font-semibold">
+            <div className="w-full flex items-center justify-between text-md font-semibold">
               <div className="flex flex-col space-y-2">
                 <label htmlFor="email">Email</label>
                 <input id="email" type="email" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={emailId} onChange={(e) => setEmailId(e.target.value)} required placeholder="Enter Email" />
@@ -105,7 +130,7 @@ const UserForm = ({ mode, show, setShow, data }) => {
 
               <div className="w-[320px] flex flex-col space-y-2">
                 <label>Select Role</label>
-                <select className="border-gray-400 rounded-md p-1 bg-white shadow-sm text-gray-600" value={role} onChange={(e) => {setRole(e.target.value)}}>
+                <select className="border-gray-400 rounded-md p-1 bg-white shadow-sm text-gray-600" value={role} onChange={(e) => handleRole(e)}>
                   <option>Roles</option>
                   <option>Admin</option>
                   <option>ReadOnly</option>
@@ -116,7 +141,7 @@ const UserForm = ({ mode, show, setShow, data }) => {
 
             { mode==="add"?
 
-              (<div className="w-full flex items-center justify-between text-xl font-semibold">
+              (<div className="w-full flex items-center justify-between text-md font-semibold">
                 <div className="flex flex-col space-y-2">
                   <label htmlFor="username">Username</label>
                   <input id="username" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={username} onChange={(e) => setUsername(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Username" />
@@ -129,10 +154,14 @@ const UserForm = ({ mode, show, setShow, data }) => {
               </div>):""
             }
 
-            <button className="py-2 px-4 bg-blue-950 text-white rounded-md hover:bg-blue-900 hover:cursor-pointer" onClick={mode==="edit"?handleEditUser:handleAddUser} disabled={isLoading}>
-              {mode === "edit" ? "Update User" : "Add User"}
-            </button>
+            <AwsAccountList visible={showAccountList}/>
+
           </div>
+          
+          
+          <button className="py-2 px-4 bg-blue-950 text-white rounded-md hover:bg-blue-900 hover:cursor-pointer" onClick={mode==="edit"?handleEditUser:handleAddUser} disabled={isLoading}>
+              {mode === "edit" ? "Update User" : "Add User"}
+          </button>
         </div>
       )}
     </>

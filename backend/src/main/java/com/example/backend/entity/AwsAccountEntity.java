@@ -1,6 +1,7 @@
 package com.example.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +18,20 @@ import java.util.List;
 public class AwsAccountEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
+    @SequenceGenerator(
+            name = "account_seq",
+            sequenceName = "account_sequence",
+            initialValue = 1000,
+            allocationSize = 1
+    )
     private Long Id;
-    private Integer AcoountId;
-    private Integer AccountArn;
-    private String AccountName;
+
+    @NotNull
+    @Column(unique = true)
+    private String accountArn;
+    private String accountName;
+    private String accountStatus;
 
     @ManyToMany
     private List<UserEntity> users;

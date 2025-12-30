@@ -17,10 +17,10 @@ public class EditUserRequestDTO {
 
     private Long id;
 
-    @Size(min=3,max=10, message = "firstName length should be between 3 and 10 characters")
+    @Size(min=3,max=10, message = "First Name length should be between 3 and 10 characters")
     private String firstName;
 
-    @Size(min=3,max=10, message = "lastName length should be between 3 and 10 characters")
+    @Size(min=3,max=10, message = "Last Name length should be between 3 and 10 characters")
     private String lastName;
 
     @Email(message="Email format is not valid")

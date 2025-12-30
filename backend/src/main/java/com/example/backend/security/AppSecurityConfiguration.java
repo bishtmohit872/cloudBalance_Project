@@ -52,6 +52,7 @@ public class AppSecurityConfiguration {
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/user/all").hasAnyRole("Admin","ReadOnly")
+                        .requestMatchers("/onboard").hasRole("Admin")
                         .requestMatchers("/user/addUser","/user/editUser/**").hasRole("Admin")
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()

@@ -304,8 +304,8 @@ const Onboard=()=>{
             <div className="w-full h-[8%] px-16 flex items-center justify-start">
                 {
                     breadCrumbs.map((breadCrumb,i)=>(
-                        <div key={i} className={`h-full w-max mr-2 pr-6 flex items-center justify-start ${i==index?"border-b-4 border-green-700":""}`}>
-                            <span className="border-2 bg-green-700 text-white rounded-full flex items-center justify-center"><CiCircleCheck size={30}/></span>
+                        <div key={i} className={`h-full w-max mr-2 pr-6 flex items-center justify-start ${i<=index?"border-b-4 border-green-700":"opacity-40"}`}>
+                            <span className={`border-2 ${index>i? "bg-green-700":"bg-gray-300"} text-white rounded-full flex items-center justify-center`}><CiCircleCheck size={30}/></span>
                             <p>{breadCrumb}</p> {}
                         </div>
                     ))

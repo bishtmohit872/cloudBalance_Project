@@ -59,10 +59,10 @@ public class UserService {
 
         UserEntity oldUser = userRepository.findById(userId).orElse(null);
         if(oldUser !=null){
-            oldUser.setFirstName(editUserRequestDTO.getFirstName()!=null && !editUserRequestDTO.getFirstName().isEmpty() ? editUserRequestDTO.getFirstName() : oldUser.getFirstName() );
-            oldUser.setLastName(editUserRequestDTO.getLastName()!=null && !editUserRequestDTO.getLastName().isEmpty() ? editUserRequestDTO.getLastName() : oldUser.getLastName());
-            oldUser.setEmail(editUserRequestDTO.getEmail()!=null && !editUserRequestDTO.getEmail().isEmpty() ? editUserRequestDTO.getEmail() : oldUser.getEmail() );
-            oldUser.setRole(editUserRequestDTO.getRole()!=null && !editUserRequestDTO.getRole().isEmpty() ? UserEntity.Role.valueOf(editUserRequestDTO.getRole()) : oldUser.getRole());
+            oldUser.setFirstName(editUserRequestDTO.getFirstName()!=null && !editUserRequestDTO.getFirstName().isBlank() ? editUserRequestDTO.getFirstName() : oldUser.getFirstName() );
+            oldUser.setLastName(editUserRequestDTO.getLastName()!=null && !editUserRequestDTO.getLastName().isBlank() ? editUserRequestDTO.getLastName() : oldUser.getLastName());
+            oldUser.setEmail(editUserRequestDTO.getEmail()!=null && !editUserRequestDTO.getEmail().isBlank() ? editUserRequestDTO.getEmail() : oldUser.getEmail() );
+            oldUser.setRole(editUserRequestDTO.getRole()!=null && !editUserRequestDTO.getRole().isBlank() ? UserEntity.Role.valueOf(editUserRequestDTO.getRole()) : oldUser.getRole());
             userRepository.save(oldUser);
             System.out.println(oldUser);
             return Transformer.UserEntitytoUserResponseDTO(oldUser);

@@ -1,14 +1,14 @@
 package com.example.backend.utils;
 
+import com.example.backend.DTO.requestDTO.AddAwsOnboardRequestDTO;
 import com.example.backend.DTO.requestDTO.AddUserRequestDTO;
 import com.example.backend.DTO.requestDTO.EditUserRequestDTO;
+import com.example.backend.DTO.responseDTO.AwsOnboardResponseDTO;
 import com.example.backend.DTO.responseDTO.UserResponseDTO;
+import com.example.backend.entity.AwsAccountEntity;
 import com.example.backend.entity.UserEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Component
 public class Transformer {
@@ -49,6 +49,22 @@ public class Transformer {
                 .firstName(editUserRequestDTO.getFirstName())
                 .lastName(editUserRequestDTO.getLastName())
                 .email(editUserRequestDTO.getEmail())
+                .build();
+    }
+
+    public static AwsAccountEntity AddOnboardRequestDTOtoAwsAccountEntity(AddAwsOnboardRequestDTO addAWSOnboardRequestDTO){
+        return AwsAccountEntity.builder()
+                .accountArn(addAWSOnboardRequestDTO.getAccountARN())
+                .accountName(addAWSOnboardRequestDTO.getAccountName())
+                .accountStatus(addAWSOnboardRequestDTO.getAccountStatus())
+                .build();
+    }
+
+    public static AwsOnboardResponseDTO AwsAccountEntitytoOnboardResponseDTO(AwsAccountEntity awsAccountEntity){
+        return AwsOnboardResponseDTO.builder()
+                .accountARN(awsAccountEntity.getAccountArn())
+                .accountName(awsAccountEntity.getAccountName())
+                .accountStatus(awsAccountEntity.getAccountStatus())
                 .build();
     }
 }

@@ -9,6 +9,7 @@ import UserList from "../dashboard/pages/UserPages/UserList";
 import UserForm from "../dashboard/pages/UserPages/UserForm";
 import Error from "../dashboard/Error";
 import Onboard from "../onboarding/Onboard";
+import AwsAccountList from "../components/AwsAccountList";
 
 const routes = createBrowserRouter([
 
@@ -19,17 +20,21 @@ const routes = createBrowserRouter([
         errorElement:<Error/>
     },
     {
+        path:"/onboardlist",
+        element:<AwsAccountList/>
+    },
+    {
         path:"/",
         element:<Protectedroute><App/></Protectedroute>,
         children:[
 
-            {
-                path:"dashboard",
-                element:<Dashboard/>,
-            },
             { 
                 path:"/user",
                 element:<UserList/>,
+            },
+            {
+                path:"dashboard",
+                element:<Dashboard/>,
             },
             {
                 path:"onboarding",

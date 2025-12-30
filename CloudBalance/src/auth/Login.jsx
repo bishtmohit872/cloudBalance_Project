@@ -45,20 +45,20 @@ const Login = () =>{
 
     return(
         <div className='h-screen w-screen flex items-center justify-center'>
-            <form className="h-max w-150 space-y-2 flex flex-col items-center justify-center" onSubmit={handleSubmit} action="">
+            <form className="h-max w-150 space-y-8 flex flex-col items-center justify-center" onSubmit={handleSubmit} action="">
                 
-                <div className='h-max w-full flex justify-center'>
-                    <img src="/assets/cloudbalance.png" className='h-18 w-80' alt="CloudBalance"/>
+                <div className='h-6 w-[300px] mb-15 flex justify-center'>
+                    <img src="/assets/cloudbalance.png" className='h-11 w-50' alt="CloudBalance"/>
                 </div>
 
                 <div className='h-max flex flex-col w-full space-y-2'>
-                    <label className="font-medium text-lg" htmlFor="username">Username</label>
-                    <input className="p-2 border-2 border-blue-200 focus:outline-none rounded-md" id="username" type="text" placeholder='Username' ref={usernameRef} required/>
+                    <label className="font-light text-sm" htmlFor="username">Email</label>
+                    <input className="p-2 border border-gray-200 focus:outline-none focus:border-blue-200 rounded-md" id="username" type="email" placeholder='Email' ref={usernameRef} required/>
                 </div>
 
                 <div className='h-max flex flex-col w-full space-y-2'>
-                    <label className="font-medium text-lg" htmlFor="password">Password</label>
-                    <input className="p-2 border-2 border-blue-200 focus:outline-none rounded-md" id="password" type="password" placeholder='Password' ref={passwordRef} required/>
+                    <label className="font-light text-sm" htmlFor="password">Password</label>
+                    <input className="p-2 border border-gray-200 focus:outline-none focus:border-blue-200 rounded-md" id="password" type="password" placeholder='Password' ref={passwordRef} required/>
                 </div>
 
                 <button className='w-full py-2 bg-[#499FDC] text-white font-medium cursor-pointer rounded-md hover:bg-blue-500'>Submit</button>

@@ -30,18 +30,6 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<UserResponseDTO>> fetchUserByCondition(){
-//        System.out.println("running custom api");
-//        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserByCondiition());
-//    }
-
-//    @GetMapping()
-//    public void getUserUpdates(){
-//        userService.getUserUpdate();
-//    }
-
-
     @GetMapping("/all")
     public ResponseEntity<List<UserResponseDTO>> fetchUsers(){
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);

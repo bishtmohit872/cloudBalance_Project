@@ -1,7 +1,9 @@
 import { useQuery,useMutation, useQueryClient } from "@tanstack/react-query"
 import { fetchUsers,addUser, editUser } from "./userApi"
 import toast from "react-hot-toast"
+import { fetchOnboardingAccounts } from "./onboardingApi";
 
+///////////////////////// user query ///////////////////////////////
 export const useUsers = () => {
   return useQuery({
     queryKey: ["users"],
@@ -37,5 +39,14 @@ export const useEditUser = () =>{
       console.log(err)
       toast.error(err?.response?.data?.error)
     }
+  })
+}
+
+///////////////////////// onboard query ///////////////////////////////
+
+export const useFetchOnboard = () =>{
+  return useQuery({
+    queryKey:["onboard"],
+    queryFn:fetchOnboardingAccounts
   })
 }
