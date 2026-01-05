@@ -13,7 +13,11 @@ const UserForm = ({ mode, show, setShow, data }) => {
   const [username,setUsername] = useState("")
   const [password,setPassword] = useState("")
 
+  
+  //this is for visiblity of onboardingAccountList
   const [showAccountList,setShowAccountList] = useState(false)
+  
+  const [awsAccounts,setAwsAccounts] = useState([])
 
   const { mutate: addUser , isLoading} = useAddUser();
   const { mutate: editUser } = useEditUser(); 
@@ -71,6 +75,7 @@ const UserForm = ({ mode, show, setShow, data }) => {
         "username": username,
         "password": password,
         "role": role,
+        "addAwsOnboardAccounts":awsAccounts
       })
     }
 
@@ -82,14 +87,14 @@ const UserForm = ({ mode, show, setShow, data }) => {
       toast.error("Cannot add user with blank details")
     }
     else{
-
       editUser({
         id:data?.id,
         payload:{
           "firstName": fName,
           "lastName": lName,
           "email": emailId,
-          "role":role
+          "role":role,
+          "addAwsOnboardAccounts":awsAccounts
         }}
       )
     }
@@ -101,14 +106,14 @@ const UserForm = ({ mode, show, setShow, data }) => {
       {show && <div className="h-screen w-screen absolute top-0 right-0 z-20 bg-gray-600 opacity-80" />}
 
       {show && (
-        <div className={`h-max w-[800px] absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg shadow-lg transition-all duration-300 ease-out py-2 px-2 flex flex-col space-y-4 text-blue-950`}>
+        <div className={`h-max w-[800px] absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg shadow-lg transition-all duration-300 ease-out py-2 px-2 flex flex-col space-y-4 text-blue-950l`}>
 
           <div className="w-full flex items-center justify-between">
             <p className="text-2xl font-bold">{mode === "edit" ? "Update User" : "Add New User"}</p>
             <IoIosCloseCircleOutline className="size-8 cursor-pointer relative bottom-6 left-6 text-white bg-blue-950 rounded-full" onClick={handleVisiblity} />
           </div>
 
-          <div className={`${showAccountList ? "max-h-[740px] duration-200" : "max-h-[200px] duration-500" } w-full p-2 flex flex-col space-y-8 rounded-lg bg-gray-100 shadow-lg transition-[max-height] ease-in-out`}>
+          <div className={`${showAccountList ? ("max-h-[740px] duration-200") : ("max-h-[200px] duration-500") } ${mode==="add" ? "max-h-[310px]":"max-h-[200px]"} w-full p-2 flex flex-col space-y-8 rounded-lg shadow-lg transition-[max-height] ease-in-out`}>
 
             <div className="w-full flex items-center justify-between text-md font-semibold">
               <div className="flex flex-col space-y-2">
@@ -154,7 +159,7 @@ const UserForm = ({ mode, show, setShow, data }) => {
               </div>):""
             }
 
-            <AwsAccountList visible={showAccountList}/>
+            <AwsAccountList mode={mode} visible={showAccountList} setAccountList={setAwsAccounts} user={data}/>
 
           </div>
           

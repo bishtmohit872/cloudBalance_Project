@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -28,5 +31,8 @@ public class EditUserRequestDTO {
 
     @NotNull(message="Specify the role of current user")
     private String role;
+
+    @Builder.Default
+    private List<AddAwsOnboardRequestDTO> addAwsOnboardAccounts = new ArrayList<>();
 
 }

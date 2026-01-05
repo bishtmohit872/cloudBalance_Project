@@ -26,7 +26,7 @@ public class AuthUtil {
                 .subject(userEntity.getEmail())
                 .claim("email",userEntity.getEmail())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+1000*60*30))
+                .expiration(new Date(System.currentTimeMillis()+1000*60*15))
                 .signWith(getSecretKey())
                 .compact();
     }

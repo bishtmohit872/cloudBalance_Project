@@ -42,6 +42,8 @@ public class GlobalExceptionHandling {
     }
 
     //Multiple Exception handle here by writing inside the {}
+    // and if there is one exception then we can pass same exception in handlerInternalAuthenticationServiceException method
+    // and if there is multiple exception then we have to pass (Exception ex) in handlerInternalAuthenticationServiceException method
     @ExceptionHandler({InternalAuthenticationServiceException.class,BadCredentialsException.class})
     public ResponseEntity<ApiError> handleInternalAuthenticationServiceException(){
         ApiError apiError = new ApiError("Invalid Credential",HttpStatus.NOT_FOUND);

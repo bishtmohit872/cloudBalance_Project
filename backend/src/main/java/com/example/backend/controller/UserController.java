@@ -1,8 +1,10 @@
 package com.example.backend.controller;
 
+import com.example.backend.DTO.requestDTO.AddAwsOnboardRequestDTO;
 import com.example.backend.DTO.requestDTO.AddUserRequestDTO;
 import com.example.backend.DTO.requestDTO.EditUserRequestDTO;
 import com.example.backend.DTO.responseDTO.UserResponseDTO;
+import com.example.backend.service.AwsOnboardService;
 import com.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,9 +28,14 @@ public class UserController {
     UserService userService;
 
     //contructor injection
-    public UserController(UserService userService){
+    public UserController(UserService userService,AwsOnboardService awsOnboardService){
         this.userService = userService;
     }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<String> getUserById(@PathVariable(name="id") String id){
+//        return new ResponseEntity<>("hello world",HttpStatus.OK);
+//    }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserResponseDTO>> fetchUsers(){

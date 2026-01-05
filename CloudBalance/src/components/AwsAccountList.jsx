@@ -1,18 +1,21 @@
 import { CiSearch } from "react-icons/ci"
-import { useFetchOnboard } from "../queryApi/query"
+import { useFetchAwsOnboardAccountsByUserEmail, useFetchOnboard } from "../queryApi/query"
 import Loader from "./Loader"
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { FaArrowCircleRight } from "react-icons/fa";
 
 import { FaRegFolderOpen } from "react-icons/fa";
+import axiosInstance from "../axiosConfig/axiosconfig";
 
-const AwsAccountList = ({visible}) => {
+const AwsAccountList = ({mode,visible,setAccountList,user}) => {
 
     const { data: awsAccount, isLoading } = useFetchOnboard();
+    const { data:userAwsAccounts, isLoading:isLoading2 } = useFetchAwsOnboardAccountsByUserEmail(user?.email);
 
-
+    // console.log(awsAccount,userAwsAccounts)
+    
     const [accounts,setAccounts] = useState([])
     const [filterAccounts,setFilterAccounts] = useState([])
     //this is for checkbox purpose
@@ -23,27 +26,36 @@ const AwsAccountList = ({visible}) => {
     const [filterAssociatedAccounts,setFilterAssociatedAccounts] = useState([])
     //this is for checkbox purpose
     const [selectedAssociatedAccounts,setSelectedAssociatedAccounts] = useState([])
- 
+    // console.log(userAwsAccounts)
    
     useEffect(()=>{
-        setAccounts(awsAccount)
-    },[awsAccount])
+        if(!isLoading && !isLoading2){
+            setAssociatedAccounts(userAwsAccounts)
+            const remainingAccounts = awsAccount?.filter(account=> !userAwsAccounts?.some(userAcc=>userAcc.accountARN===account.accountARN))
+            setAccounts(remainingAccounts)
+        }
+
+    },[isLoading,isLoading2])
+
+    // useEffect(()=>{
+    //     setAccounts(awsAccount)
+    // },[awsAccount])
     
     useEffect(()=>{
         setFilterAccounts(accounts)
     },[accounts])
 
-    // useEffect(()=>{
-    //     setAccounts(filterAccounts)
-    // },[filterAccounts])
-
+ 
     useEffect(()=>{
         setFilterAssociatedAccounts(associatedAccounts)
+        setAccountList(associatedAccounts)
+
     },[associatedAccounts])
+    
 
 
     const handleRightArrow=()=>{
-        setAssociatedAccounts(selectedAccounts)
+        setAssociatedAccounts([...associatedAccounts,...selectedAccounts])
 
         const remainingAccounts = filterAccounts.filter((account)=>{
             return !selectedAccounts.includes(account)
@@ -57,6 +69,7 @@ const AwsAccountList = ({visible}) => {
     const handleLeftArrow=()=>{
         
         if(!selectedAssociatedAccounts.length==0){
+            
             const remainingAccounts = associatedAccounts.filter((account)=>{
                 return !selectedAssociatedAccounts.includes(account)
             })
@@ -70,7 +83,7 @@ const AwsAccountList = ({visible}) => {
 
     return (
         // <div className={`h-[500px] w-full p-8 ${visible?"flex":"hidden"} items-center justify-between border border-gray-400`}>
-        <div className={`h-[500px] w-full p-4 flex items-center justify-between border border-gray-200 rounded-lg bg-white transition-all  ease-in-out ${visible ? "opacity-100 translate-y-0 max-h-[500px] duration-1000" : "opacity-0 translate-y-4 max-h-0 duration-300 overflow-hidden pointer-events-none"}`}>
+        <div className={`${mode==="edit"?"h-[500px]":"h-[410px]"} w-full p-4 flex items-center justify-between border border-gray-200 bg-white rounded-lg transition-all  ease-in-out ${visible ? "opacity-100 translate-y-0 max-h-[500px] duration-1000" : "opacity-0 translate-y-4 max-h-0 duration-300 overflow-hidden pointer-events-none"}`}>
 
             <div className="h-max w-[45%] border border-gray-300 rounded-lg flex flex-col items-center">
                 <div className="w-full p-2 flex items-center justify-between bg-blue-200 rounded-t-lg text-white">
@@ -86,7 +99,7 @@ const AwsAccountList = ({visible}) => {
                     }}/>
                 </div>
 
-                <div className="h-[360px] w-full flex flex-col overflow-y-scroll scrollbar rounded-sm">
+                <div className={`${mode==="edit"?"h-[360px]":"h-[290px]"} w-full flex flex-col overflow-y-scroll scrollbar rounded-sm`}>
                     {
                         isLoading ? <Loader /> : (
                             filterAccounts?.map((account, index) => {
@@ -128,14 +141,14 @@ const AwsAccountList = ({visible}) => {
 
                 <div className="h-10 w-full p-2 flex items-center justify-center border-b border-gray-300">
                     <CiSearch size={25} />
-                    <input type="search" className="w-full h-full ml-2 focus:outline-none font-medium" placeholder="Search" disabled={associatedAccounts.length==0} onChange={(e)=>{
-                        setFilterAssociatedAccounts(associatedAccounts.filter((account)=>{
+                    <input type="search" className="w-full h-full ml-2 focus:outline-none font-medium" placeholder="Search" disabled={associatedAccounts?.length==0} onChange={(e)=>{
+                        setFilterAssociatedAccounts(associatedAccounts?.filter((account)=>{
                             return account.accountName.toLowerCase().includes(e.target.value.toLowerCase()) || account.accountARN.split(":")[4].includes(e.target.value)
                         }))
                     }}/>
                 </div>
                 
-                <div className="h-[360px] w-full flex flex-col items-center justify-start overflow-y-scroll scrollbar">
+                <div className={`${mode==="edit"?"h-[360px]":"h-[290px]"} w-full flex flex-col items-center justify-start overflow-y-scroll scrollbar`}>
                     {
                         filterAssociatedAccounts?.length==0?(
                             <div className="w-full mt-8 flex flex-col items-center">

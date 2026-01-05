@@ -1,20 +1,37 @@
 package com.example.backend.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
+//Here iam removing data annotation because UserEntity has a Many to Many relation with AwsAccountEntity so during execution of controller method
+//of addUser and editUser it will throw StackOverFlowError() because (toString) Method which coming from @Data Annotation call recursively.
+// So in UserService when i call System.out.println(oldUSer) then it internally call like this
+//UserEntity.toString()
+// └─ prints awsAccount list
+//     └─ AwsAccountEntity.toString()
+//         └─ prints users list
+//             └─ UserEntity.toString()
+//                 └─ prints awsAccount list
+//                     └─ AwsAccountEntity.toString()
+//                         └─ prints users list
+//                             └─ UserEntity.toString()
+//                                 ...
+//                                         ...
+//                                         (infinite)
+// Due to this it print stackOVerFlow Error due to this okay
+
+
+@Getter
+@Setter
 @Builder
-@Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity implements UserDetails {
@@ -34,9 +51,10 @@ public class UserEntity implements UserDetails {
     private String username;
 
     private String password;
-    
+
+    @Builder.Default
     @ManyToMany(mappedBy = "users")
-    private List<AwsAccountEntity> awsAccount;
+    private List<AwsAccountEntity> awsAccount = new ArrayList<>();
 
     public enum Role{
         Admin,Customer,ReadOnly;

@@ -35,6 +35,7 @@ const UserList = () => {
     }
 
     const handleAdd = (mode) => {
+        setUserData([])
         setMode(mode)
         setFormVisiblity(true)
     }
@@ -70,7 +71,7 @@ const UserList = () => {
 
                     <table className="h-[600px] w-full text-center">
                         <thead className="shadow-lg">
-                            <tr className="bg-blue-950 w-max border text-left text-white">
+                            <tr className="bg-[#499FDC] w-max border text-left text-white">
                                 {
                                     tableHeader.map((header, index) => (
                                         <th key={index} className="border border-gray-300 px-4 py-2">
@@ -89,12 +90,12 @@ const UserList = () => {
                         <tbody>
                             {
                                 userList?.map((user, index) => (userId !== user.id) ? (
-                                    <tr key={index} className={`px-0 py-2 text-blue-950 hover:bg-blue-900 hover:text-white ${index % 2 != 0 ? 'bg-gray-100' : ""}`}>
+                                    <tr key={index} className={`px-0 py-2 text-blue-950 hover:bg-[#225172] hover:text-white ${index % 2 != 0 ? 'bg-gray-100' : ""}`}>
                                         {
                                             tableBody.map((data, index) => (
                                                 <td key={index} className="px-4 text-left border border-gray-300">
                                                     {data.key != "role" ? user[data.key] : (
-                                                        <p className="w-[100px] text-center bg-blue-950 rounded-full px-2 text-white">{user[data.key]}</p>
+                                                        <p className="w-[100px] text-center bg-[#1088dd] rounded-full px-2 text-white font-bold">{user[data.key]}</p>
                                                     )}
                                                 </td>
                                             ))

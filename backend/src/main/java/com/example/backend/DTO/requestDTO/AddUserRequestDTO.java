@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //admin detail for reference purpose
 //{
 //        "firstName":"Mohit",
@@ -43,4 +46,9 @@ public class AddUserRequestDTO {
 
     @NotNull
     private String role;
+
+    @Builder.Default
+    private List<AddAwsOnboardRequestDTO> addAwsOnboardAccounts = new ArrayList<>();
+
+
 }

@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
-    UserEntity findByUsernameOrEmail(String username, String email);
-    List<UserEntity> findByUsernameContaining(String query);
+//    UserEntity findByUsernameOrEmail(String username, String email);
+//    List<UserEntity> findByUsernameContaining(String query);
 
 //    This ? type notation is useful in preventing from sql injection and you can use alternative of ? that is
 //    @Query("SELECT u FROM UserEntity u where u.lastName = ?1")

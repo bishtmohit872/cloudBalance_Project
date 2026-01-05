@@ -11,13 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 public class AwsOnboardService {
+
+
 
     @Autowired
     AwsAccountRepository awsAccountRepository;
@@ -28,14 +29,14 @@ public class AwsOnboardService {
 
     public List<AwsOnboardResponseDTO> getAllOnboardAccount(){
         List<AwsAccountEntity> awsAccountEntity = awsAccountRepository.findAll();
-        List<AwsOnboardResponseDTO> awsOnboardResponseDTOList = awsAccountEntity.stream().map((awsAccount)->Transformer.AwsAccountEntitytoOnboardResponseDTO(awsAccount)).collect(Collectors.toList());
+        List<AwsOnboardResponseDTO> awsOnboardResponseDTOList = awsAccountEntity.stream().map((awsAccount)->Transformer.AwsAccountEntitytoAwsOnboardResponseDTO(awsAccount)).collect(Collectors.toList());
         return awsOnboardResponseDTOList;
     }
 
     public AwsOnboardResponseDTO saveOnboardData(AddAwsOnboardRequestDTO addAwsOnboardRequestDTO){
         AwsAccountEntity awsAccountEntity = Transformer.AddOnboardRequestDTOtoAwsAccountEntity(addAwsOnboardRequestDTO);
         awsAccountRepository.save(awsAccountEntity);
-        return Transformer.AwsAccountEntitytoOnboardResponseDTO(awsAccountEntity);
+        return Transformer.AwsAccountEntitytoAwsOnboardResponseDTO(awsAccountEntity);
     }
 
     public void assignAWSAccountToUserAccount(Long userId, List<AddAwsOnboardRequestDTO> addAwsOnboardRequestDTO){
@@ -45,27 +46,59 @@ public class AwsOnboardService {
            user.setAwsAccount(new ArrayList<>());
         }
 
-        List<AwsAccountEntity> awsAccountEntities = addAwsOnboardRequestDTO.stream().map((entity)->Transformer.AddOnboardRequestDTOtoAwsAccountEntity(entity)).collect(Collectors.toList());
+        if(addAwsOnboardRequestDTO.size()!=0){
 
-        System.out.println("entering for assigning account");
+            List<AwsAccountEntity> awsAccountEntities = addAwsOnboardRequestDTO.stream().map((entity)->Transformer.AddOnboardRequestDTOtoAwsAccountEntity(entity)).collect(Collectors.toList());
 
-        for(AwsAccountEntity awsAccountEntity : awsAccountEntities){
-            AwsAccountEntity awsAccount = awsAccountRepository.findByAccountArn(awsAccountEntity.getAccountArn()).orElseThrow(()->new RuntimeException("Aws Acount Not Found"));
+            System.out.println("entering for assigning account");
 
-            if(awsAccount.getUsers()==null){
-                System.out.println("null here");
-                awsAccount.setUsers(new ArrayList<>());
+            List<AwsAccountEntity> newAwsAccountEntity = new ArrayList<>();
+
+            for(AwsAccountEntity awsAccountEntity : awsAccountEntities){
+                AwsAccountEntity awsAccount = awsAccountRepository.findByAccountArn(awsAccountEntity.getAccountArn()).orElseThrow(()->new RuntimeException("Aws Acount Not Found"));
+
+                if(awsAccount.getUsers()==null){
+                    System.out.println("null here");
+                    awsAccount.setUsers(new ArrayList<>());
+                }
+
+                if(!awsAccount.getUsers().contains(user)){
+                    awsAccount.getUsers().add(user);
+                }
+
+                if(!user.getAwsAccount().contains(awsAccount)){
+                    user.getAwsAccount().add(awsAccount);
+                }
+
+                newAwsAccountEntity.add(awsAccount);
+
             }
 
-            if(!awsAccount.getUsers().contains(user)){
-                awsAccount.getUsers().add(user);
+            for(AwsAccountEntity oldAwsAccountEntity :  user.getAwsAccount()){
+                if( !(newAwsAccountEntity.contains(oldAwsAccountEntity)) ){
+                    oldAwsAccountEntity.getUsers().remove(user);
+                }
             }
-
-            if(!user.getAwsAccount().contains(awsAccount)){
-                user.getAwsAccount().add(awsAccount);
-            }
-
+            awsAccountRepository.saveAll(user.getAwsAccount());
         }
-        awsAccountRepository.saveAll(user.getAwsAccount());
+
+        else if(addAwsOnboardRequestDTO==null || addAwsOnboardRequestDTO.size()==0 || addAwsOnboardRequestDTO.isEmpty()){
+            for(AwsAccountEntity awsAccountEntity : user.getAwsAccount()){
+                awsAccountEntity.getUsers().remove(user);
+            }
+            user.getAwsAccount().clear();
+            userRepository.save(user);
+            return;
+        }
+    }
+
+
+    public List<AwsOnboardResponseDTO> getAwsAccountByUserEmail(String email){
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Email not found"));
+        if(user.getAwsAccount().size()==0){
+            return new ArrayList<>();
+        }
+        List<AwsOnboardResponseDTO> awsOnboardResponseDTO = user.getAwsAccount().stream().map((account)-> Transformer.AwsAccountEntitytoAwsOnboardResponseDTO(account)).collect(Collectors.toList());
+        return awsOnboardResponseDTO;
     }
 }

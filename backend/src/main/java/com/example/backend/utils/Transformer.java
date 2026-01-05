@@ -60,7 +60,7 @@ public class Transformer {
                 .build();
     }
 
-    public static AwsOnboardResponseDTO AwsAccountEntitytoOnboardResponseDTO(AwsAccountEntity awsAccountEntity){
+    public static AwsOnboardResponseDTO AwsAccountEntitytoAwsOnboardResponseDTO(AwsAccountEntity awsAccountEntity){
         return AwsOnboardResponseDTO.builder()
                 .accountARN(awsAccountEntity.getAccountArn())
                 .accountName(awsAccountEntity.getAccountName())
