@@ -28,13 +28,13 @@ public class UserService {
 
     public List<UserResponseDTO> getAllUsers(){
         List<UserEntity> users = userRepository.findAll();
-        List<UserResponseDTO> allUsers = users.stream().map(user->Transformer.UserEntitytoUserResponseDTO(user)).collect(Collectors.toList());
+        List<UserResponseDTO> allUsers = users.stream().map(user->Transformer.userEntitytoUserResponseDTO(user)).collect(Collectors.toList());
         return allUsers;
     }
 
     public UserResponseDTO getUserById(Long id){
         UserEntity user =  userRepository.findById(id).orElseThrow(); //ByDefault NoSuchElementException is given by orElseThrow()
-        return Transformer.UserEntitytoUserResponseDTO(user);
+        return Transformer.userEntitytoUserResponseDTO(user);
     }
 
     @Transactional
@@ -67,7 +67,7 @@ public class UserService {
 //            }
             System.out.println("userService: olduserSave");
             userRepository.save(oldUser);
-            return Transformer.UserEntitytoUserResponseDTO(oldUser);
+            return Transformer.userEntitytoUserResponseDTO(oldUser);
         }
 
 

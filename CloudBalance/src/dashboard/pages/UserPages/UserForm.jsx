@@ -13,6 +13,10 @@ const UserForm = ({ mode, show, setShow, data }) => {
   const [username,setUsername] = useState("")
   const [password,setPassword] = useState("")
 
+  //this useState is used for checking , that is role changed to another role from customer than 
+  //remove all the accounts from that user in frontend
+  const [isCustomer,setIsCustomer] = useState(true)
+
   
   //this is for visiblity of onboardingAccountList
   const [showAccountList,setShowAccountList] = useState(false)
@@ -77,8 +81,8 @@ const UserForm = ({ mode, show, setShow, data }) => {
         "role": role,
         "addAwsOnboardAccounts":awsAccounts
       })
-    }
 
+    }
   }
 
   const handleEditUser = ()=>{
@@ -87,6 +91,11 @@ const UserForm = ({ mode, show, setShow, data }) => {
       toast.error("Cannot add user with blank details")
     }
     else{
+
+      if(role!="Customer"){
+        setIsCustomer(false)
+      }
+
       editUser({
         id:data?.id,
         payload:{
@@ -94,9 +103,10 @@ const UserForm = ({ mode, show, setShow, data }) => {
           "lastName": lName,
           "email": emailId,
           "role":role,
-          "addAwsOnboardAccounts":awsAccounts
+          "addAwsOnboardAccounts":role!="Customer"?[]:awsAccounts
         }}
       )
+
     }
   }
 
@@ -159,7 +169,7 @@ const UserForm = ({ mode, show, setShow, data }) => {
               </div>):""
             }
 
-            <AwsAccountList mode={mode} visible={showAccountList} setAccountList={setAwsAccounts} user={data}/>
+            <AwsAccountList mode={mode} visible={showAccountList} setAccountList={setAwsAccounts} user={data} isCustomer={isCustomer}/>
 
           </div>
           

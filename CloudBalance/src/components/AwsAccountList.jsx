@@ -1,18 +1,17 @@
 import { CiSearch } from "react-icons/ci"
 import { useFetchAwsOnboardAccountsByUserEmail, useFetchOnboard } from "../queryApi/query"
 import Loader from "./Loader"
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { FaArrowCircleRight } from "react-icons/fa";
 
 import { FaRegFolderOpen } from "react-icons/fa";
-import axiosInstance from "../axiosConfig/axiosconfig";
 
 const AwsAccountList = ({mode,visible,setAccountList,user}) => {
 
     const { data: awsAccount, isLoading } = useFetchOnboard();
-    const { data:userAwsAccounts, isLoading:isLoading2 } = useFetchAwsOnboardAccountsByUserEmail(user?.email);
+    const { data:userAwsAccounts, isLoading:isLoading2, } = useFetchAwsOnboardAccountsByUserEmail(user?.email);
 
     // console.log(awsAccount,userAwsAccounts)
     
@@ -21,12 +20,10 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
     //this is for checkbox purpose
     const [selectedAccounts, setSelectedAccounts] = useState([])
 
-
     const [associatedAccounts,setAssociatedAccounts] = useState([])
     const [filterAssociatedAccounts,setFilterAssociatedAccounts] = useState([])
     //this is for checkbox purpose
     const [selectedAssociatedAccounts,setSelectedAssociatedAccounts] = useState([])
-    // console.log(userAwsAccounts)
    
     useEffect(()=>{
         if(!isLoading && !isLoading2){
@@ -35,23 +32,30 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
             setAccounts(remainingAccounts)
         }
 
-    },[isLoading,isLoading2])
-
-    // useEffect(()=>{
-    //     setAccounts(awsAccount)
-    // },[awsAccount])
+    },[awsAccount,userAwsAccounts])
+    
+    // console.log("Associated Account:",associatedAccounts)
+    // console.log("Filter Associated Accounts:",filterAssociatedAccounts)
     
     useEffect(()=>{
         setFilterAccounts(accounts)
     },[accounts])
-
- 
+    
+    
     useEffect(()=>{
-        setFilterAssociatedAccounts(associatedAccounts)
+        setFilterAssociatedAccounts([...associatedAccounts])
         setAccountList(associatedAccounts)
-
+        
     },[associatedAccounts])
     
+
+
+    //if another role is selected other than Customer then all associated role will be deleted!
+    // useEffect(()=>{
+    //     if(!isCustomer){
+    //         refetchUserAwsAccounts()
+    //     }
+    // },[isCustomer])
 
 
     const handleRightArrow=()=>{
@@ -106,9 +110,9 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
                                 const id = account?.accountARN.split(":")[4];
 
                                 return (
-                                    <label key={index} className={`p-4 border-b border-gray-300 ${index%2==0 ? "bg-gray-200":"bg-white"}`}>
+                                    <label key={index} className={`p-4 border-b border-gray-300 cursor-pointer ${index%2==0 ? "bg-gray-200":"bg-white"}`}>
                                         <input
-                                            className="mr-2 cursor-pointer"
+                                            className="mr-2"
                                             type="checkbox"
                                             checked={selectedAccounts?.includes(account)}
                                             onChange={() =>
@@ -161,9 +165,9 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
                                 const id = account.accountARN.split(":")[4];
 
                                 return (
-                                    <label key={index} className={`w-full p-4 border-b border-gray-300 ${index%2==0 ? "bg-gray-200":"bg-white"}`}>
+                                    <label key={index} className={`w-full p-4 border-b border-gray-300 cursor-pointer ${index%2==0 ? "bg-gray-200":"bg-white"}`}>
                                         <input
-                                            className="mr-2 cursor-pointer"
+                                            className="mr-2"
                                             type="checkbox"
                                             checked={selectedAssociatedAccounts.includes(account)}
                                             onChange={() =>

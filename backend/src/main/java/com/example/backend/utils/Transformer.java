@@ -32,7 +32,7 @@ public class Transformer {
 
     }
 
-    public static UserResponseDTO UserEntitytoUserResponseDTO(UserEntity userEntity){
+    public static UserResponseDTO userEntitytoUserResponseDTO(UserEntity userEntity){
         return  UserResponseDTO.builder()
                 .id(userEntity.getId())
                 .firstName(userEntity.getFirstName())

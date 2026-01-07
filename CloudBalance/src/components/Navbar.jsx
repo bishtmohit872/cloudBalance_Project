@@ -2,18 +2,19 @@ import { useSelector } from "react-redux"
 // import { setLoginStatus } from "../utils/Utils"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { removeLoginUser } from "../redux/store"
+import { changeSideBarState, removeLoginUser } from "../redux/store"
 import { removeToken } from "../utils/Utils"
 
-const Navbar = ({state,setState}) =>{
+const Navbar = () =>{
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const loginUser = useSelector((store)=>store.loginUserInfo)
     
+    const sideBarState = useSelector(store=>store.sideBarState)
 
     const handleSideBarState=()=>{
-        setState(!state)
+        dispatch(changeSideBarState(!sideBarState))
     }
 
     const handleLogout=()=>{

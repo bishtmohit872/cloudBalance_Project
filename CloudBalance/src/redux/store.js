@@ -6,7 +6,8 @@ import storage from 'redux-persist/lib/storage'
 
 const initialState = {
   loginUserInfo: {},
-  breadCrumbs:["A. Create an IAM Role","B. Add customer Managed Policies","C. create CUR"]
+  breadCrumbs:["A. Create an IAM Role","B. Add customer Managed Policies","C. create CUR"],
+  sideBarState:false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -25,6 +26,12 @@ const userReducer = (state = initialState, action) => {
         ...state,
         loginUserInfo:{}
       }
+    
+    case "ChangeSideBarState":
+      return {
+        ...state,
+        sideBarState:action.payload
+      }
 
     default:
       return state;
@@ -38,6 +45,10 @@ export const addLoginUser = (data)=>{
 
 export const removeLoginUser=()=>{
   return {type:"RemoveLoginUser"}
+}
+
+export const changeSideBarState=(data)=>{
+  return {type:"ChangeSideBarState",payload:data}
 }
 
 const persistconfig={

@@ -31,9 +31,12 @@ export const useEditUser = () =>{
   
   return useMutation({
     mutationFn:({id,payload})=>editUser(id,payload),
-    onSuccess:()=>{
+    onSuccess:(data,variables)=>{
       toast.success("User Updated !")
       queryClient.invalidateQueries(["users"])
+
+      const email = variables?.payload?.email
+      queryClient.invalidateQueries(["awsAccount",email])
     },
     onError:(err)=>{
       console.log(err)

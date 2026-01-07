@@ -10,6 +10,8 @@ import UserForm from "../dashboard/pages/UserPages/UserForm";
 import Error from "../dashboard/Error";
 import Onboard from "../onboarding/Onboard";
 import AwsAccountList from "../components/AwsAccountList";
+import AwsCloud from "../awsCloud/AwsCloud";
+import CostExplorer from "../costExplorer/CostExplorer";
 
 const routes = createBrowserRouter([
 
@@ -29,8 +31,9 @@ const routes = createBrowserRouter([
         children:[
 
             { 
-                path:"/user",
+                path:"user",
                 element:<UserList/>,
+                index:true,
             },
             {
                 path:"dashboard",
@@ -40,6 +43,14 @@ const routes = createBrowserRouter([
                 path:"onboarding",
                 element:<Onboard/>
             },
+            {
+                path:"aws-cloud",
+                element:<AwsCloud/>
+            },
+            {
+                path:"cost-explorer",
+                element:<CostExplorer/>
+            }
 
         ],
         errorElement:<Error/>  

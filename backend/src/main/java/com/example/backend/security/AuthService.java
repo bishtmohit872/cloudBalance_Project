@@ -45,7 +45,7 @@ public class AuthService {
         UserEntity userDetails = (UserEntity) authentication.getPrincipal();
         String token = authUtil.generateAccessToken(userDetails);
 
-        UserResponseDTO userResponseDTO = Transformer.UserEntitytoUserResponseDTO(userDetails);
+        UserResponseDTO userResponseDTO = Transformer.userEntitytoUserResponseDTO(userDetails);
 
         return LoginResponseDTO.builder()
                 .Jwt(token)
