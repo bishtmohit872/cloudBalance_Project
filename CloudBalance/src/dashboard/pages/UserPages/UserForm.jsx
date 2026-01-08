@@ -113,10 +113,10 @@ const UserForm = ({ mode, show, setShow, data }) => {
   return (
     <>
       {/* {show && <div className="size-full absolute top-0 z-10 bg-gray-600 opacity-80" />} */}
-      {show && <div className="h-screen w-screen absolute top-0 right-0 z-20 bg-gray-600 opacity-80" />}
+      {show && <div className="h-screen w-screen absolute top-0 right-0 z-10 bg-gray-600 opacity-80" />}
 
       {show && (
-        <div className={`h-max w-[800px] absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg shadow-lg transition-all duration-300 ease-out py-2 px-2 flex flex-col space-y-4 text-blue-950l`}>
+        <div className={`h-max w-[800px] absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-200 rounded-lg shadow-lg transition-all duration-300 ease-out py-2 px-2 flex flex-col space-y-4 text-blue-950`}>
 
           <div className="w-full flex items-center justify-between">
             <p className="text-2xl font-bold">{mode === "edit" ? "Update User" : "Add New User"}</p>

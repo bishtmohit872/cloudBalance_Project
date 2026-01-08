@@ -1,9 +1,6 @@
 package com.example.backend.DTO.requestDTO;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,6 +45,7 @@ public class AddUserRequestDTO {
     private String role;
 
     @Builder.Default
+    @NotEmpty(message="Associated accounts cannot be empty")
     private List<AddAwsOnboardRequestDTO> addAwsOnboardAccounts = new ArrayList<>();
 
 

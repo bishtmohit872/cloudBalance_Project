@@ -22,16 +22,16 @@ const MenuList = [
     },
     {
         id:3,
-        name:"Aws Service",
-        logo:<FaAws className="size-7"/>,
-        path:"aws-cloud",
+        name:"Cost Explorer",
+        logo:<BsFileEarmarkBarGraph className="size-7"/>,
+        path:"cost-explorer",
         allowedRoles:["Customer"]
     },
     {
         id:4,
-        name:"Cost Explorer",
-        logo:<BsFileEarmarkBarGraph className="size-7"/>,
-        path:"cost-explorer",
+        name:"Aws Service",
+        logo:<FaAws className="size-7"/>,
+        path:"aws-cloud",
         allowedRoles:["Customer"]
     },
 ]

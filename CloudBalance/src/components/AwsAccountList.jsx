@@ -43,8 +43,16 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
     
     
     useEffect(()=>{
-        setFilterAssociatedAccounts([...associatedAccounts])
-        setAccountList(associatedAccounts)
+
+        if(associatedAccounts){
+            setFilterAssociatedAccounts([...associatedAccounts])
+            setAccountList(associatedAccounts)
+        }
+        else{
+            setFilterAssociatedAccounts([])
+            setAccountList([])
+        }
+       
         
     },[associatedAccounts])
     
