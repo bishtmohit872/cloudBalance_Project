@@ -3,11 +3,35 @@ import {composeWithDevTools} from '@redux-devtools/extension'
 
 import { persistStore,persistReducer } from "redux-persist"
 import storage from 'redux-persist/lib/storage'
+import { options } from "fusioncharts";
 
 const initialState = {
   loginUserInfo: {},
   breadCrumbs:["A. Create an IAM Role","B. Add customer Managed Policies","C. create CUR"],
-  sideBarState:false
+  sideBarState:false,
+  Options : [
+  ["Service", "Service"],
+  ["Instance Type", "INSTANCE_TYPE"],
+  ["Account ID", "ACCOUNT_ID"],
+  ["Usage Type", "USAGE_TYPE"],
+  ["Platform", "PLATFORM"],
+  ["Region", "REGION"],
+  ["Usage Type Group", "USAGE_TYPE_GROUP"],
+  [
+    "More",
+    [
+      ["Purchase Option", "PURCHASE_OPTION"],
+      ["API Operation", "API_OPERATION"],
+      ["Resource", "RESOURCE"],
+      ["Availabilityzone", "AVAILABILITY_ZONE"],
+      ["Tenancy", "TENANCY"],
+      ["Legal Entity", "LEGAL_ENTITY"],
+      ["Billing Entity", "BILLING_ENTITY"]
+    ]
+  ]
+]
+
+
 };
 
 const userReducer = (state = initialState, action) => {
@@ -32,6 +56,12 @@ const userReducer = (state = initialState, action) => {
         ...state,
         sideBarState:action.payload
       }
+    
+    case "setActiveOption":
+      return{
+        ...state,
+        Options:action.payload
+      }
 
     default:
       return state;
@@ -49,6 +79,10 @@ export const removeLoginUser=()=>{
 
 export const changeSideBarState=(data)=>{
   return {type:"ChangeSideBarState",payload:data}
+}
+
+export const setActiveOption=(data)=>{
+  return {type:"setActiveOption",payload:data}
 }
 
 const persistconfig={

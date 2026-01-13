@@ -1,14 +1,16 @@
-import React from "react";
 import FusionCharts from "fusioncharts";
 import Charts from "fusioncharts/fusioncharts.charts";
 import ReactFC from "react-fusioncharts";
+import Loader from "../components/Loader";
 
 // Initialize charts
 ReactFC.fcRoot(FusionCharts, Charts);
 
-const FusionChart = ({ typeIndex }) => {
+const FusionChart = ({ typeIndex,xLabel,groupInstances,isLoading}) => {
 
     const graphType = ["mscolumn2d", "msline", "stackedcolumn2d"]
+
+    const colors=["#2498FE","#61DBFD","#FFA214","#A3DC29","#7AF0CA","#F2CB00"]
 
     const chartConfigs = {
         type: graphType[typeIndex],
@@ -17,7 +19,7 @@ const FusionChart = ({ typeIndex }) => {
         // plotSpacePercent:"25",
         // minPlotWidth:"60",
         width: "100%",
-        height: "450",
+        height: "60%",
         dataFormat: "json",
         dataSource: {
             chart: {
@@ -27,13 +29,9 @@ const FusionChart = ({ typeIndex }) => {
                 theme: "fusion",
                 drawCrossLine: "1", //1: show helper tooltips , 0: not show helper tooltip
                 showValues: "0", //1: show value at top of single bar graph , 0: not showing any value 
-
-                animation: 1,         // enable general animation
-                animateResize: 1,    // smooth resize
-
                 // Smooth transition properties
                 animationDuration: "1", // 1 second animation per render
-                drawAnchors: "0",       // line/column anchor points off for smoother visual
+                drawAnchors: "0",       
                 showHoverEffect: "0"  ,  
 
                 legendPosition: "bottom",
@@ -66,7 +64,7 @@ const FusionChart = ({ typeIndex }) => {
 
             categories: [
                 {
-                    category: [
+                    category:xLabel?xLabel:[
                         { label: "Oct 2024" },
                         { label: "Nov 2024" },
                         { label: "Dec 2024" },
@@ -77,7 +75,14 @@ const FusionChart = ({ typeIndex }) => {
                 }
             ],
 
-            dataset: [
+            dataset: groupInstances?Object.keys(groupInstances).slice(0,6).map((instance,index)=>(
+                    {
+                        seriesname: instance,
+                        color:colors[index],
+                        data:groupInstances[instance]
+                    }
+            )) : 
+            [
                 {
                     seriesname: "Amazon Elastic Compute Cloud",
                     color: "#2498FE",
@@ -154,7 +159,7 @@ const FusionChart = ({ typeIndex }) => {
         }
     };
 
-    return <ReactFC {...chartConfigs} />;
+    return isLoading?<Loader/>:<ReactFC {...chartConfigs}/>;
 };
 
 export default FusionChart;

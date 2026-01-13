@@ -32,8 +32,8 @@ axiosInstance.interceptors.response.use(
       (error.response.status === 401 ||
        error.response.status === 403)
     ) {
-      removeToken()
-      window.location.href = "/login";
+      // removeToken()
+      // window.location.href = "/login";
     }
 
     return Promise.reject(error);

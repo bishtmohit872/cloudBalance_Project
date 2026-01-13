@@ -22,3 +22,11 @@ spring:
       password: "mohit123"
   jwt:
     secretKey: "$#2cloud@#$#$@^&^&#&%#@%@#$Balance$$*!%^#*O^(^%*^&$)Project"
+
+snowflake:
+  url: https://driwnxq-ye10711.snowflakecomputing.com
+  user: MOHIT
+  password: Mnimohitbisht7011.
+  role: ACCOUNTADMIN
+  db: AWSCOSTANALYTICS
+  schema: PUBLIC

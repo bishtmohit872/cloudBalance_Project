@@ -4,6 +4,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.ElementCollection;
+import net.snowflake.client.jdbc.SnowflakeSQLException;
+import net.snowflake.client.jdbc.internal.org.checkerframework.checker.units.qual.A;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
+import java.security.SignatureException;
 import java.util.NoSuchElementException;
 
 // Remember this GlobalExceptionHandler work in MVC area not in Filter area
@@ -61,6 +64,13 @@ public class GlobalExceptionHandling {
         ApiError apiError = new ApiError("JWT Token Expired",HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ApiError> handleSignatureException() {
+        ApiError apiError = new ApiError("JWT token has been changed", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrityViolationException(){
         ApiError apiError = new ApiError("User already exist with same email or username",HttpStatus.NOT_ACCEPTABLE);
@@ -83,6 +93,18 @@ public class GlobalExceptionHandling {
 
         ApiError apiError = new ApiError("incoming JSON format is not valid", HttpStatus.NOT_ACCEPTABLE);
         return new ResponseEntity<>(apiError, apiError.getStatusCode());
+    }
+
+    @ExceptionHandler(ClassCastException.class)
+    public ResponseEntity<ApiError> handleClassCastException(ClassCastException e){
+        ApiError apiError = new ApiError(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
+    }
+
+    @ExceptionHandler(SnowflakeSQLException.class)
+    public ResponseEntity<ApiError> handleSnowflakeSQLException(SnowflakeSQLException e){
+        ApiError apiError = new ApiError(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
 
 }

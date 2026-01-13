@@ -38,6 +38,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+	//by default snowpark comes with logging package , you have to exclude it after adding it to dependency
+	implementation ('com.snowflake:snowpark_2.12:1.18.0'){
+		exclude group: 'org.slf4j', module: 'slf4j-simple'
+	}
 }
 
 tasks.named('test') {

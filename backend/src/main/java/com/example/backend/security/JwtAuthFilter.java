@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 @Slf4j
@@ -38,10 +39,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try{
             log.info("incoming request:{}",request.getRequestURI());
 
-//           if(request.getServletPath().equals("/auth/login")){
-//                filterChain.doFilter(request,response);
-//                return;
-//            }
+           if(request.getServletPath().equals("/snow")){
+                filterChain.doFilter(request,response);
+                return;
+            }
             final String requestTokenHeader = request.getHeader("Authorization");
 
 
@@ -61,9 +62,27 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request,response);
         }
+
+        catch (io.jsonwebtoken.security.SignatureException ex) {
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+
+            String timestamp = LocalDateTime.now().toString();
+
+            response.getWriter().write("""
+                        {
+                          "error": "JWT token has been changed",
+                          "statusCpde": "401 UNAUTHORIZED,
+                          "timestamp": "%s"
+                        }
+                    """.formatted(timestamp.toString()));
+            return;
+        }
         catch(Exception e){
             handlerExceptionResolver.resolveException(request,response,null,e);
             System.out.println("jwtauthfilter:"+e);
+            return;
         }
 
     }
