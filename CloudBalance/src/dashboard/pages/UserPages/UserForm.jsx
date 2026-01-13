@@ -17,7 +17,6 @@ const UserForm = ({ mode, show, setShow, data }) => {
   //remove all the accounts from that user in frontend
   const [isCustomer,setIsCustomer] = useState(true)
 
-  
   //this is for visiblity of onboardingAccountList
   const [showAccountList,setShowAccountList] = useState(false)
   
@@ -123,29 +122,29 @@ const UserForm = ({ mode, show, setShow, data }) => {
             <IoIosCloseCircleOutline className="size-8 cursor-pointer relative bottom-6 left-6 text-white bg-blue-950 rounded-full" onClick={handleVisiblity} />
           </div>
 
-          <div className={`${showAccountList ? ("max-h-[740px] duration-200") : ("max-h-[200px] duration-500") } ${mode==="add" ? "max-h-[310px]":"max-h-[200px]"} w-full p-2 flex flex-col space-y-8 rounded-lg shadow-lg transition-[max-height] ease-in-out`}>
+          <div className={`${showAccountList ? ("max-h-[740px] duration-200") : ("max-h-[200px] duration-500") } ${mode==="add" ? "max-h-[310px]":"max-h-[200px]"} w-full p-2 flex flex-col space-y-8 rounded-lg shadow-lg transition-[max-height] ease-in-out overflow-visible`}>
 
             <div className="w-full flex items-center justify-between text-md font-semibold">
               <div className="flex flex-col space-y-2">
                 <label htmlFor="firstName">First Name</label>
-                <input id="firstName" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={fName} onChange={(e) => setFName(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter First Name" />
+                <input id="firstName" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm focus:outline-blue-800" value={fName} onChange={(e) => setFName(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter First Name" />
               </div>
 
               <div className="flex flex-col space-y-2">
                 <label htmlFor="lastName">Last Name</label>
-                <input id="lastName" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={lName} onChange={(e) => setLName(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Last Name" />
+                <input id="lastName" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm focus:outline-blue-800" value={lName} onChange={(e) => setLName(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Last Name" />
               </div>
             </div>
 
             <div className="w-full flex items-center justify-between text-md font-semibold">
               <div className="flex flex-col space-y-2">
                 <label htmlFor="email">Email</label>
-                <input id="email" type="email" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={emailId} onChange={(e) => setEmailId(e.target.value)} required placeholder="Enter Email" />
+                <input id="email" type="email" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm focus:outline-blue-800" value={emailId} onChange={(e) => setEmailId(e.target.value)} required placeholder="Enter Email" />
               </div>
 
               <div className="w-[320px] flex flex-col space-y-2">
                 <label>Select Role</label>
-                <select className="border-gray-400 rounded-md p-1 bg-white shadow-sm text-gray-600" value={role} onChange={(e) => handleRole(e)}>
+                <select className="border-gray-400 rounded-md p-1 bg-white shadow-sm text-gray-600 focus:outline-blue-950" value={role} onChange={(e) => handleRole(e)}>
                   <option>Roles</option>
                   <option>Admin</option>
                   <option>ReadOnly</option>
@@ -159,12 +158,12 @@ const UserForm = ({ mode, show, setShow, data }) => {
               (<div className="w-full flex items-center justify-between text-md font-semibold">
                 <div className="flex flex-col space-y-2">
                   <label htmlFor="username">Username</label>
-                  <input id="username" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={username} onChange={(e) => setUsername(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Username" />
+                  <input id="username" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm focus:outline-blue-800" value={username} onChange={(e) => setUsername(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Username" />
                 </div>
 
                 <div className="flex flex-col space-y-2">
                   <label htmlFor="password">Password</label>
-                  <input id="password" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Password" />
+                  <input id="password" type="text" className="w-[320px] border-gray-400 rounded-md p-1 bg-white shadow-sm focus:outline-blue-800" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={3} maxLength={20} placeholder="Enter Password" />
                 </div>
               </div>):""
             }

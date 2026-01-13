@@ -12,8 +12,6 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
 
     const { data: awsAccount, isLoading } = useFetchOnboard();
     const { data:userAwsAccounts, isLoading:isLoading2, } = useFetchAwsOnboardAccountsByUserEmail(user?.email);
-
-    // console.log(awsAccount,userAwsAccounts)
     
     const [accounts,setAccounts] = useState([])
     const [filterAccounts,setFilterAccounts] = useState([])
@@ -27,8 +25,9 @@ const AwsAccountList = ({mode,visible,setAccountList,user}) => {
    
     useEffect(()=>{
         if(!isLoading && !isLoading2){
-            setAssociatedAccounts(userAwsAccounts)
-            const remainingAccounts = awsAccount?.filter(account=> !userAwsAccounts?.some(userAcc=>userAcc.accountARN===account.accountARN))
+            setAssociatedAccounts(userAwsAccounts||[])
+            const remainingAccounts = awsAccount?.filter(account=> !(userAwsAccounts||[])?.some(userAcc=>userAcc.accountARN===account.accountARN))
+
             setAccounts(remainingAccounts)
         }
 

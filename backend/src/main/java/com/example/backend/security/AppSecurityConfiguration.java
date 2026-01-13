@@ -51,7 +51,7 @@ public class AppSecurityConfiguration {
                 .sessionManagement(sessionConfig->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                        .requestMatchers("/user/all").hasAnyRole("Admin","ReadOnly")
+                        .requestMatchers("/user/all").hasAnyRole("Admin","ReadOnly","Customer")
                         .requestMatchers("/user/addUser","/user/editUser/**").hasRole("Admin")
                         .requestMatchers("/auth/**","/snow/**","/onboard/**").permitAll()
                 )

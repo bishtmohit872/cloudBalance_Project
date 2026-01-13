@@ -2,17 +2,21 @@ import { useSelector } from "react-redux"
 // import { setLoginStatus } from "../utils/Utils"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { changeSideBarState, removeLoginUser } from "../redux/store"
+import { changeSideBarState, removeLoginUser, setSwitchAccount } from "../redux/store"
 import { removeToken } from "../utils/Utils"
+import { useFetchAwsOnboardAccountsByUserEmail } from "../queryApi/query"
 
 const Navbar = () =>{
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const loginUser = useSelector((store)=>store.loginUserInfo)
-    
+    const showAccount = useSelector(store=>store.switchAccount)
     const sideBarState = useSelector(store=>store.sideBarState)
-
+    
+    const {data,isLoading} = useFetchAwsOnboardAccountsByUserEmail(loginUser?.email)
+    // console.log(data)
+    
     const handleSideBarState=()=>{
         dispatch(changeSideBarState(!sideBarState))
     }
@@ -24,11 +28,41 @@ const Navbar = () =>{
         navigate("/login")
     }
 
+    const handleSelectAccount=(AccountName)=>{
+        // console.log(AccountName,data)
+        data?.forEach(({id,accountName})=>{
+            if(accountName==AccountName){
+                dispatch(setSwitchAccount(id))
+                return
+            }
+            else if(AccountName==="Assigned Accounts"){
+                dispatch(setSwitchAccount(null))
+            }
+        })
+        // dispatch(setSwitchAccount(accountId))
+    }
+
+    
     return(
         <header className="h-max w-screen py-4 px-4 flex items-center justify-between shadow-md bg-color-white relative z-10">
-            <div className="h-max w-[250px] flex items-end justify-between">
-                <Link to="/dashboard"><img className="h-full w-[200px]" src="/assets/cloudbalance.png" /></Link>
-                <img className="size-6 cursor-pointer" src="/assets/menu.png" alt="menu" onClick={handleSideBarState}/>
+            <div className="h-max w-[550px] flex items-end justify-start">
+                <div className="h-max w-[250px] flex items-end justify-between">
+                    <Link to="/dashboard"><img className="h-full w-[200px]" src="/assets/cloudbalance.png" /></Link>
+                    <img className="size-6 cursor-pointer" src="/assets/menu.png" alt="menu" onClick={handleSideBarState}/>
+                </div>
+                
+                {
+                    showAccount!=false&&(
+                        <select className="h-[30px] w-[140px] ml-9 border border-gray-300 outline-none focus:outline-none text-sm rounded-md" onClick={(e)=>handleSelectAccount(e.target.value)}>
+                            <option>Assigned Accounts</option>
+                            {
+                                data?.map((account,index)=>(
+                                    <option key={index} className="text-sm text-blue-950">{account.accountName}</option>
+                                )) 
+                            }
+                        </select>
+                    )
+                }
             </div>
 
             <div className="h-max w-max  flex items-center justify-center">

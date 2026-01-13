@@ -31,3 +31,15 @@ export const fetchCostExplorerByCategory = async(category,value)=>{
     })
     return res.data
 }
+
+export const fetchCostExplorerByAccountId = async(accountId)=>{
+    if(accountId==null) return null
+
+    const res = await axiosInstance.get("/snow/cost/account",{
+        params:{
+            accountId:accountId
+        }
+    })
+
+    return res.data
+}

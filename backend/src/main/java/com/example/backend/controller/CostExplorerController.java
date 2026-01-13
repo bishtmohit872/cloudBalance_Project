@@ -1,7 +1,8 @@
 package com.example.backend.controller;
 
-import com.example.backend.DTO.responseDTO.costExplorerDTO.MonthlyCategoryDTO;
-import com.example.backend.DTO.responseDTO.costExplorerDTO.MonthlyCostDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.accountInstanceCost.AccountInstanceCostDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.categoryCost.MonthlyCategoryDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.monthlyCost.MonthlyCostDTO;
 import com.example.backend.DTO.responseDTO.costExplorerDTO.SideFilterSubOption;
 import com.example.backend.service.CostExplorerService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,11 @@ public class CostExplorerController {
     @GetMapping("/by-category")
     public ResponseEntity<List<MonthlyCategoryDTO>> getByCategory(@RequestParam(name="category") String category, @RequestParam(name="value") String value){
         return ResponseEntity.status(HttpStatus.OK).body(costExplorerService.fetchByCategory(category,value));
+    }
+
+    @GetMapping("/account")
+    public ResponseEntity<List<AccountInstanceCostDTO>> getByAccountId(@RequestParam(name="accountId") String accountId){
+        return ResponseEntity.status(HttpStatus.OK).body(costExplorerService.fetchByAccountId(accountId));
     }
 
 }

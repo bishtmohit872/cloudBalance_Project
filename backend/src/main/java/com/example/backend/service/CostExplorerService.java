@@ -1,10 +1,14 @@
 package com.example.backend.service;
 
 import com.example.backend.DTO.responseDTO.costExplorerDTO.*;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.accountInstanceCost.AccountInstanceCostDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.categoryCost.CategoryCostDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.categoryCost.MonthlyCategoryDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.monthlyCost.InstanceCostDTO;
+import com.example.backend.DTO.responseDTO.costExplorerDTO.monthlyCost.MonthlyCostDTO;
 import com.example.backend.repository.CostExplorerRepository;
 import com.snowflake.snowpark.Row;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +92,35 @@ public class CostExplorerService {
         return monthlyCategoryDTOList;
     }
 
+    public List<AccountInstanceCostDTO> fetchByAccountId(String accountId){
+        Row[] rows = costExplorerRepository.getByAccountId(accountId);
+        System.out.println(rows);
 
+        Map<String,List<InstanceCostDTO>> accountMonthWiseMap = new LinkedHashMap<>();
 
+        for(Row row : rows){
+            String instanceType = row.get(0).toString();
+            String date = row.get(1).toString();
+            Double profit = row.getDouble(2);
 
+            accountMonthWiseMap
+                    .computeIfAbsent(date,k->new ArrayList<>())
+                            .add(InstanceCostDTO.builder()
+                                    .instanceType(instanceType)
+                                    .monthlyCost(profit)
+                                    .build()
+                            );
+            }
+        List<AccountInstanceCostDTO> accountInstanceCostDTO = new ArrayList<>();
+
+        for(Map.Entry<String,List<InstanceCostDTO>> entry: accountMonthWiseMap.entrySet()){
+
+            accountInstanceCostDTO.add(AccountInstanceCostDTO.builder()
+                    .date(entry.getKey())
+                    .instanceCostDTO(entry.getValue())
+                    .build()
+            );
+        }
+        return accountInstanceCostDTO;
+    }
 }

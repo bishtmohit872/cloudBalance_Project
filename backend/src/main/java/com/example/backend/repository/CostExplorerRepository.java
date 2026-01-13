@@ -36,13 +36,22 @@ public class CostExplorerRepository {
     }
 
     public Row[] getByCategory(String category,String value){
-        System.out.println(category + value);
         StringBuilder query = new StringBuilder();
         query.append("select ");
         query.append("INSTANCE_TYPE,DATE_TRUNC('MONTH',BILL_DATE),PROFIT from AWSCOSTANALYTICS.PUBLIC.COSTANALYTICS Where ");
         query.append(category);
         query.append("=");
         query.append("'"+value+"'");
+        Row[] rows = session.sql(query.toString()).collect();
+        return rows;
+    }
+
+    public Row[] getByAccountId(String accountId){
+        StringBuilder query = new StringBuilder();
+        query.append("select ");
+        query.append("INSTANCE_TYPE,DATE_TRUNC('MONTH',BILL_DATE),PROFIT from AWSCOSTANALYTICS.PUBLIC.COSTANALYTICS Where ");
+        query.append("ACCOUNT_ID=");
+        query.append(accountId);
         Row[] rows = session.sql(query.toString()).collect();
         return rows;
     }

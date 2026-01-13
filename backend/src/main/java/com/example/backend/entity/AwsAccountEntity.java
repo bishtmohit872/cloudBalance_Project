@@ -47,7 +47,7 @@ public class AwsAccountEntity {
     @Column(unique = true)
     private String accountArn;
     private String accountName;
-    private String accountStatus;
+//    private String accountStatus;
 
     @Builder.Default
     @ManyToMany

@@ -45,7 +45,6 @@ public class AddUserRequestDTO {
     private String role;
 
     @Builder.Default
-    @NotEmpty(message="Associated accounts cannot be empty")
     private List<AddAwsOnboardRequestDTO> addAwsOnboardAccounts = new ArrayList<>();
 
 

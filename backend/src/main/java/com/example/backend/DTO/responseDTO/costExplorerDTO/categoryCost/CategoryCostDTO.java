@@ -1,4 +1,4 @@
-package com.example.backend.DTO.responseDTO.costExplorerDTO;
+package com.example.backend.DTO.responseDTO.costExplorerDTO.categoryCost;
 
 import lombok.*;
 

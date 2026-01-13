@@ -19,19 +19,18 @@ const initialState = {
   ["Usage Type Group", "USAGE_TYPE_GROUP"],
   [
     "More",
-    [
-      ["Purchase Option", "PURCHASE_OPTION"],
-      ["API Operation", "API_OPERATION"],
-      ["Resource", "RESOURCE"],
-      ["Availabilityzone", "AVAILABILITY_ZONE"],
-      ["Tenancy", "TENANCY"],
-      ["Legal Entity", "LEGAL_ENTITY"],
-      ["Billing Entity", "BILLING_ENTITY"]
+      [
+        ["Purchase Option", "PURCHASE_OPTION"],
+        ["API Operation", "API_OPERATION"],
+        ["Resource", "RESOURCE"],
+        ["Availabilityzone", "AVAILABILITY_ZONE"],
+        ["Tenancy", "TENANCY"],
+        ["Legal Entity", "LEGAL_ENTITY"],
+        ["Billing Entity", "BILLING_ENTITY"]
+      ]
     ]
-  ]
-]
-
-
+  ],
+  switchAccount:false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -62,6 +61,12 @@ const userReducer = (state = initialState, action) => {
         ...state,
         Options:action.payload
       }
+    
+    case "setSwitchAccount":
+      return{
+        ...state,
+        switchAccount:action.payload
+      }
 
     default:
       return state;
@@ -83,6 +88,10 @@ export const changeSideBarState=(data)=>{
 
 export const setActiveOption=(data)=>{
   return {type:"setActiveOption",payload:data}
+}
+
+export const setSwitchAccount=(data)=>{
+  return {type:"setSwitchAccount",payload:data}
 }
 
 const persistconfig={

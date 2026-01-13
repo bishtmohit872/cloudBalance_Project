@@ -56,15 +56,16 @@ public class Transformer {
         return AwsAccountEntity.builder()
                 .accountArn(addAWSOnboardRequestDTO.getAccountARN())
                 .accountName(addAWSOnboardRequestDTO.getAccountName())
-                .accountStatus(addAWSOnboardRequestDTO.getAccountStatus())
+//                .accountStatus(addAWSOnboardRequestDTO.getAccountStatus())
                 .build();
     }
 
     public static AwsOnboardResponseDTO AwsAccountEntitytoAwsOnboardResponseDTO(AwsAccountEntity awsAccountEntity){
         return AwsOnboardResponseDTO.builder()
+                .id(awsAccountEntity.getId())
                 .accountARN(awsAccountEntity.getAccountArn())
                 .accountName(awsAccountEntity.getAccountName())
-                .accountStatus(awsAccountEntity.getAccountStatus())
+//                .accountStatus(awsAccountEntity.getAccountStatus())
                 .build();
     }
 }

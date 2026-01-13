@@ -7,11 +7,12 @@ import FusionChart from "./FusionChart"
 import { useEffect, useState } from "react"
 import CostExplorerTable from "./CostExplorerTable"
 import dayjs from "dayjs"
-import { useFetchCostExplorerCategory, useFetchCostExplorerColumn, useFetchCostExplorerMonthWiseData } from "../queryApi/query"
+import { useFetchByAccountId, useFetchCostExplorerCategory, useFetchCostExplorerColumn, useFetchCostExplorerMonthWiseData } from "../queryApi/query"
 
 import { useDispatch, useSelector } from "react-redux"
-import { setActiveOption } from "../redux/store"
+import { setActiveOption, setSwitchAccount } from "../redux/store"
 import Loader from "../components/Loader"
+
 
 
 const CostExplorer = () => {
@@ -22,27 +23,92 @@ const CostExplorer = () => {
 
     const dispatch = useDispatch()
     const option = useSelector(store => store.Options)
-
+    const accountId = useSelector(store => store.switchAccount)
+    
     const [category, setCategory] = useState(null)
     const [categoryValue, setCategoryValue] = useState(null)
     const [sideFilterCategory, setSideFilterCategory] = useState([])
     const { data: categoryOutput, isLoading: loading1 } = useFetchCostExplorerCategory(category, categoryValue)
 
-    const { data: costData, isLoading } = useFetchCostExplorerMonthWiseData(option[0][1],categoryValue);
-    
+    const { data: costData, isLoading } = useFetchCostExplorerMonthWiseData(option[0][1], categoryValue,accountId);
+
     const [xCategory, setXCategory] = useState(null)
-
     const [groupInstances, setGroupInstances] = useState(null)
-    console.log(groupInstances)
-
     const [sameMonthGroupCost, setSameMonthGroupcost] = useState(null)
 
     //FilterSideBar
     const [openSubFilter, setOpenSubFilter] = useState(null)
     const [uniqueSideFilterOptions, setUniqueSideFilterOptions] = useState(null)
+    const [parentKey, setParentKey] = useState([])
+    // console.log(parentKey)
     const { data: sideFilterOptions, isLoading: loading } = useFetchCostExplorerColumn(openSubFilter)
+    const { data: accountData, isLoading: loadingAccount } = useFetchByAccountId(accountId)
 
-    
+    useEffect(() => {
+        dispatch(setSwitchAccount(true))
+    }, [])
+
+    ///Account data formatting
+    const buildInstanceMonthWise = (response) => {
+        const result = {};
+        const totalMonths = response.length
+
+        response.forEach((monthData, monthIndex) => {
+            monthData.instanceCostDTO.forEach(({ instanceType, monthlyCost }) => {
+
+                if (!result[instanceType]) {
+                    result[instanceType] = Array(totalMonths)
+                        .fill(0)
+                        .map(() => ({ value: 0 }));
+                }
+
+                result[instanceType][monthIndex].value += Number(monthlyCost);
+            });
+        });
+
+        return result;
+    };
+
+    const buildMonthWise = (response) => {
+        return response.map(item => ({
+            label: dayjs(item.date).format("MMMM YYYY")
+        }));
+    };
+
+    const buildColumnWiseCost = (instanceMonthWise) => {
+        const result = {}
+
+        if (!instanceMonthWise) return result
+
+        const instances = Object.keys(instanceMonthWise)
+        if (instances.length === 0) return result
+
+        const totalMonths = instanceMonthWise[instances[0]].length
+
+        for (let monthIndex = 0; monthIndex < totalMonths; monthIndex++) {
+            let total = 0
+
+            instances.forEach(instance => {
+                total += Number(instanceMonthWise[instance][monthIndex]?.value || 0)
+            })
+
+            result[monthIndex] = total
+        }
+
+        return result
+    }
+
+    useEffect(() => {
+        if (!loadingAccount && accountData) {
+            const result = buildInstanceMonthWise(accountData || [])
+            const monthLabels = buildMonthWise(accountData || [])
+            const columnCost = buildColumnWiseCost(result||[])
+            setGroupInstances(result)
+            setXCategory(monthLabels)
+            setSameMonthGroupcost(columnCost)
+        }
+    }, [loadingAccount,accountData])
+
 
     useEffect(() => {
 
@@ -88,7 +154,7 @@ const CostExplorer = () => {
 
             setGroupInstances(result)
             setXCategory(monthLabels)
-            setSameMonthGroupcost(monthlyGroupCost) 
+            setSameMonthGroupcost(monthlyGroupCost)
         }
 
     }, [categoryOutput])
@@ -210,15 +276,16 @@ const CostExplorer = () => {
         }
     }
 
-    const handleSubFilterCall = (value, option) => {
-        if(categoryValue!=option){
+    const handleSubFilterCall = (value, option, key) => {
+        if (categoryValue != option) {
             setCategory(value)
             setCategoryValue(option)
+            setParentKey([...parentKey, key])
         }
-        else if(categoryValue==option){
+        else if (categoryValue == option) {
             setCategoryValue(null)
         }
-        setSideFilterCategory(prev=>prev.includes(option)?prev.filter(i=>i!==option):[...prev,option])
+        setSideFilterCategory(prev => prev.includes(option) ? prev.filter(i => i !== option) : [...prev, option])
         // console.log(value,option)
     }
 
@@ -265,7 +332,6 @@ const CostExplorer = () => {
                                     option[0] === "More" && (
                                         <div className="w-max px-0 py-1 bg-white border border-gray-300 text-blue-900 rounded-sm">
                                             <select className="w-max outline-none font-semibold" onChange={(e) => { handleActiveIndex(index, e.target.value) }}>
-                                                <option className="font-semibold">More</option>
                                                 {
                                                     option[1].map((moreOptions, index) => (
                                                         <option key={index}>{moreOptions[0]}</option>
@@ -358,7 +424,7 @@ const CostExplorer = () => {
 
                                                     <div className="h-10 w-full flex items-center justify-between" onClick={() => handleFirstHalf(value)}>
                                                         <div className="h-10 w-max flex items-center justify-between">
-                                                            <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" />
+                                                            <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} />
                                                             <p className="ml-2 text-sm font-medium">{key}</p>
                                                         </div>
                                                         <p className="text-xs text-gray-400 font-medium">Include Only</p>
@@ -368,7 +434,7 @@ const CostExplorer = () => {
                                                     <div className={`${openSubFilter == value ? "h-50 opacity-100 p-2" : "h-0 opacity-0"} w-full border border-gray-300 rounded-md transition-all duration-500 overflow-y-scroll scrollbar`}>
                                                         {
                                                             loading ? <Loader /> : uniqueSideFilterOptions?.map((option, index) => (
-                                                                <div key={index} className="w-full flex items-center cursor-pointer" onClick={() => handleSubFilterCall(value, option)}>
+                                                                <div key={index} className="w-full flex items-center cursor-pointer" onClick={() => handleSubFilterCall(value, option, key)}>
                                                                     <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" />
                                                                     <p>{option}</p>
                                                                 </div>
@@ -388,7 +454,7 @@ const CostExplorer = () => {
 
                                                         <div className="h-10 w-full flex items-center justify-between" onClick={() => handleSecondHalf(value)}>
                                                             <div className="h-10 w-max flex items-center justify-start">
-                                                                <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" />
+                                                                <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} />
                                                                 <p className="ml-2 text-sm font-medium">{key}</p>
                                                             </div>
                                                             <p className="text-xs text-gray-400 font-medium">Include Only</p>
@@ -397,13 +463,13 @@ const CostExplorer = () => {
                                                         <div className={`${openSubFilter == value ? "h-50 opacity-100 p-2" : "h-0 opacity-0"} w-full border border-gray-300 rounded-md transition-all duration-500 overflow-y-scroll scrollbar`}>
                                                             {
                                                                 loading ? <Loader /> : uniqueSideFilterOptions?.map((option, index) => (
-                                                                    <div key={index} className="w-full flex items-start cursor-pointer" onClick={() => handleSubFilterCall(value, option)}>
+                                                                    <div key={index} className="w-full flex items-start cursor-pointer" onClick={() => handleSubFilterCall(value, option, key)}>
                                                                         <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" />
                                                                         <p>{option}</p>
                                                                     </div>
                                                                 ))
                                                             }
-                                                            
+
                                                         </div>
 
                                                     </div>
