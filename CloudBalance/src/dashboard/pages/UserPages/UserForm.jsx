@@ -68,7 +68,10 @@ const UserForm = ({ mode, show, setShow, data }) => {
   const handleAddUser = async()=>{
 
     if(fName.length==0||lName.length==0||emailId.length==0||username.length==0||password.length==0||(role=="Roles"||role.length==0)){
-      toast.error("Cannot add user with blank details")
+      toast.error("All Fields are Mandatory")
+    }
+    else if((role=="Customer")&&(awsAccounts.length==0 || awsAccounts==null || awsAccounts==undefined)){
+      toast.error("Assigning Aws Account is Mandatory!")
     }
     else{
       addUser({

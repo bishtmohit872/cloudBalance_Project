@@ -25,14 +25,14 @@ const MenuList = [
         name:"Cost Explorer",
         logo:<BsFileEarmarkBarGraph className="size-7"/>,
         path:"cost-explorer",
-        allowedRoles:["Customer"]
+        allowedRoles:["Admin","Customer","ReadOnly"]
     },
     {
         id:4,
         name:"Aws Service",
         logo:<FaAws className="size-7"/>,
         path:"aws-cloud",
-        allowedRoles:["Customer"]
+        allowedRoles:["Admin","Customer","ReadOnly"]
     },
 ]
 

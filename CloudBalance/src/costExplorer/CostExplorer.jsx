@@ -424,18 +424,18 @@ const CostExplorer = () => {
 
                                                     <div className="h-10 w-full flex items-center justify-between" onClick={() => handleFirstHalf(value)}>
                                                         <div className="h-10 w-max flex items-center justify-between">
-                                                            <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} />
+                                                            <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} readOnly/>
                                                             <p className="ml-2 text-sm font-medium">{key}</p>
                                                         </div>
                                                         <p className="text-xs text-gray-400 font-medium">Include Only</p>
                                                     </div>
 
 
-                                                    <div className={`${openSubFilter == value ? "h-50 opacity-100 p-2" : "h-0 opacity-0"} w-full border border-gray-300 rounded-md transition-all duration-500 overflow-y-scroll scrollbar`}>
+                                                    <div className={`${openSubFilter == value ? "h-50 opacity-100 p-2" : "h-0 opacity-0"} w-full border border-gray-300 rounded-md transition-all duration-500 overflow-y-scroll scrollbar relative overflow-x-hidden`}>
                                                         {
                                                             loading ? <Loader /> : uniqueSideFilterOptions?.map((option, index) => (
                                                                 <div key={index} className="w-full flex items-center cursor-pointer" onClick={() => handleSubFilterCall(value, option, key)}>
-                                                                    <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" />
+                                                                    <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" readOnly/>
                                                                     <p>{option}</p>
                                                                 </div>
                                                             ))
@@ -454,17 +454,17 @@ const CostExplorer = () => {
 
                                                         <div className="h-10 w-full flex items-center justify-between" onClick={() => handleSecondHalf(value)}>
                                                             <div className="h-10 w-max flex items-center justify-start">
-                                                                <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} />
+                                                                <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} readOnly/>
                                                                 <p className="ml-2 text-sm font-medium">{key}</p>
                                                             </div>
                                                             <p className="text-xs text-gray-400 font-medium">Include Only</p>
                                                         </div>
 
-                                                        <div className={`${openSubFilter == value ? "h-50 opacity-100 p-2" : "h-0 opacity-0"} w-full border border-gray-300 rounded-md transition-all duration-500 overflow-y-scroll scrollbar`}>
+                                                        <div className={`${openSubFilter == value ? "h-50 opacity-100 p-2" : "h-0 opacity-0"} w-full border border-gray-300 rounded-md transition-all duration-500 overflow-y-scroll scrollbar relative overflow-x-hidden`}>
                                                             {
                                                                 loading ? <Loader /> : uniqueSideFilterOptions?.map((option, index) => (
                                                                     <div key={index} className="w-full flex items-start cursor-pointer" onClick={() => handleSubFilterCall(value, option, key)}>
-                                                                        <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" />
+                                                                        <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" readOnly/>
                                                                         <p>{option}</p>
                                                                     </div>
                                                                 ))

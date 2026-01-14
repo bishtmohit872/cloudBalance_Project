@@ -12,10 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddAwsOnboardRequestDTO {
 
-    @NotNull
+    @NotNull(message="AccountARN cannot be Empty")
     private String accountARN;
-    @NotNull
+    @NotNull(message="Account Name cannot be Empty")
     private String accountName;
-    @NotNull
-    private String accountStatus;
 }

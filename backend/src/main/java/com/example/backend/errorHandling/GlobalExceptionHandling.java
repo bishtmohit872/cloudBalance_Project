@@ -28,7 +28,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(){
-        ApiError apiError = new ApiError("Role in not Specified",HttpStatus.NOT_ACCEPTABLE);
+        ApiError apiError = new ApiError("Role in not Specified",HttpStatus.BAD_REQUEST); //because wrong input from client side
         return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
 
@@ -40,7 +40,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<ApiError> handleMalformedJwtException(){
-        ApiError apiError = new ApiError("Warned, Token is being changed",HttpStatus.UNAUTHORIZED);
+        ApiError apiError = new ApiError("Warned, Token is being changed",HttpStatus.UNAUTHORIZED); //because token expire or altered here
         return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
 
@@ -49,13 +49,13 @@ public class GlobalExceptionHandling {
     // and if there is multiple exception then we have to pass (Exception ex) in handlerInternalAuthenticationServiceException method
     @ExceptionHandler({InternalAuthenticationServiceException.class,BadCredentialsException.class})
     public ResponseEntity<ApiError> handleInternalAuthenticationServiceException(){
-        ApiError apiError = new ApiError("Invalid Credential",HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError("Invalid Credential",HttpStatus.UNAUTHORIZED);//because authentication get fail in both condition
         return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ApiError> handleUsernameNotFoundException(UsernameNotFoundException e){
-        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.NOT_FOUND);
+        ApiError apiError = new ApiError(e.getMessage(), HttpStatus.UNAUTHORIZED);//here we can use 404 but from this we are giving hint to attacker that it not exist in db
         return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
 
@@ -73,7 +73,7 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrityViolationException(){
-        ApiError apiError = new ApiError("User already exist with same email or username",HttpStatus.NOT_ACCEPTABLE);
+        ApiError apiError = new ApiError("User already exist with same email or username",HttpStatus.CONFLICT); // because of duplicacy conflict
         return new ResponseEntity<>(apiError, apiError.getStatusCode());
     }
 
@@ -84,14 +84,14 @@ public class GlobalExceptionHandling {
                 .getFieldError()
                 .getDefaultMessage();
 
-        ApiError apiError = new ApiError(defaultMessage,HttpStatus.NOT_ACCEPTABLE);
+        ApiError apiError = new ApiError(defaultMessage,HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError,apiError.getStatusCode());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
 
-        ApiError apiError = new ApiError("incoming JSON format is not valid", HttpStatus.NOT_ACCEPTABLE);
+        ApiError apiError = new ApiError("incoming JSON format is not valid", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(apiError, apiError.getStatusCode());
     }
 

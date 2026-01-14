@@ -14,5 +14,4 @@ public class AwsOnboardResponseDTO {
     private Long id;
     private String accountARN;
     private String accountName;
-    private String accountStatus;
 }

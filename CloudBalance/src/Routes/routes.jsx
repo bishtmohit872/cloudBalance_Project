@@ -33,7 +33,7 @@ const routes = createBrowserRouter([
             { 
                 path:"user",
                 element:<UserList/>,
-                index:true,
+                
             },
             {
                 path:"dashboard",
@@ -49,7 +49,7 @@ const routes = createBrowserRouter([
             },
             {
                 path:"cost-explorer",
-                element:<CostExplorer/>
+                element:<CostExplorer/>,
             }
 
         ],

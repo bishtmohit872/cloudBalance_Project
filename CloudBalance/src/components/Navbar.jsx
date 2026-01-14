@@ -53,7 +53,7 @@ const Navbar = () =>{
                 
                 {
                     showAccount!=false&&(
-                        <select className="h-[30px] w-[140px] ml-9 border border-gray-300 outline-none focus:outline-none text-sm rounded-md" onClick={(e)=>handleSelectAccount(e.target.value)}>
+                        <select className="h-10 w-[160px] px-2 ml-9 border border-gray-300 outline-none focus:outline-none text-sm rounded-md" onClick={(e)=>handleSelectAccount(e.target.value)}>
                             <option>Assigned Accounts</option>
                             {
                                 data?.map((account,index)=>(
@@ -65,13 +65,14 @@ const Navbar = () =>{
                 }
             </div>
 
-            <div className="h-max w-max  flex items-center justify-center">
-                <div className="h-max w-[180px] flex items-center justify-evenly border-r-2 border-gray-400">
+            <div className="h-max w-[390px]  flex items-center justify-start">
+                <div className="h-max w-[280px] flex items-center justify-start border-r-2 border-gray-400">
                     <img className="size-12 shadow-md shadow-gray-400 rounded-full" src="/assets/user.png" alt="user"/>
 
-                    <div className="text-sm">
+                    <div className="w-40 text-sm ml-4">
                         <p className="text-[#499FDC] font-bold">Welcome</p>
-                        <p>{loginUser.firstName+" "+loginUser.lastName}</p>
+                        <p className="pr-2 inline capitalize font-semibold text-gray-700 border-r">{loginUser?.firstName+" "+loginUser?.lastName}</p>
+                        <span className="ml-2 text-xs text-blue-900 uppercase font-medium">{loginUser?.role}</span>
                     </div>
                 </div>
 

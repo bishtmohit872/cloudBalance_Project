@@ -1,7 +1,7 @@
 import { useQuery,useMutation, useQueryClient } from "@tanstack/react-query"
 import { fetchUsers,addUser, editUser } from "./userApi"
 import toast from "react-hot-toast"
-import { fetchOnboardingAccounts, fetchOnboardingAccountsByUserEmail } from "./onboardingApi";
+import { fetchOnboardingAccounts, fetchOnboardingAccountsByUserEmail, saveOnboardingAccounts } from "./onboardingApi";
 import { fetchCostExplorerByAccountId, fetchCostExplorerByCategory, fetchCostExplorerMonthWiseData, fetchCostExplorerSideOption } from "./costExplorerApi";
 
 
@@ -23,7 +23,12 @@ export const useAddUser = () => {
       queryClient.invalidateQueries(["users"])
     },
     onError:(err)=>{
-        toast.error(err?.response?.data?.error)
+        if(err?.response?.status===403){
+          toast.error("You are not authorized to perform this action !")
+        }
+        else{
+          toast.error(err?.response?.data?.error)
+        }
     }
   });
 };
@@ -36,13 +41,16 @@ export const useEditUser = () =>{
     onSuccess:(data,variables)=>{
       toast.success("User Updated !")
       queryClient.invalidateQueries(["users"])
-
       const email = variables?.payload?.email
       queryClient.invalidateQueries(["awsAccount",email])
     },
     onError:(err)=>{
-      console.log(err)
-      toast.error(err?.response?.data?.error)
+      if(err?.response?.status===403){
+          toast.error("You are not authorized to perform this action !")
+      }
+      else{
+          toast.error(err?.response?.data?.error)
+      }
     }
   })
 }
@@ -61,6 +69,24 @@ export const useFetchAwsOnboardAccountsByUserEmail = (email)=>{
     queryKey:["awsAccount",email],
     queryFn:()=>fetchOnboardingAccountsByUserEmail(email),
     enabled:!!email,
+  })
+}
+
+export const useSaveAwsOnboardAccount=()=>{
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn:({iamRoleARN,accountName})=>{
+      console.log(iamRoleARN,accountName)
+      return saveOnboardingAccounts(iamRoleARN,accountName)
+    },
+    onSuccess:()=>{
+      toast.success("New AwsAccount Created!")
+      queryClient.invalidateQueries(["onboard"])
+    },
+    onError:(err)=>{
+      console.log(err)
+      toast.error(err?.response?.data?.error)
+    }
   })
 }
 
