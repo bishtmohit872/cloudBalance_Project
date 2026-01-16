@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -42,6 +43,9 @@ public class AppSecurityConfiguration {
 
     public final JwtAuthFilter jwtAuthFilter;
 
+    @Autowired
+    CustomAccessDeniedHandling customAccessDeniedHandling;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security){
 
@@ -50,18 +54,15 @@ public class AppSecurityConfiguration {
                 .csrf(Customizer->Customizer.disable())
                 .sessionManagement(sessionConfig->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/user/**").hasRole("Admin")
-                        .requestMatchers("/snow/**","/onboard/user/**").hasAnyRole("Admin","ReadOnly","Customer")
-                        .requestMatchers("/user/all").hasRole("ReadOnly")
-                        .requestMatchers("/onboard/**").hasAnyRole("Admin")
+                        .requestMatchers("/user/all").hasAnyRole("ReadOnly","Admin")
+                        .requestMatchers("/snow/**", "/onboard/user/**").hasAnyRole("ReadOnly", "Customer","Admin")
+                        .requestMatchers("/**").hasRole("Admin")
                 )
                 //adding custom filter here
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-//                .exceptionHandling(exceptionHandlingConfigurer->exceptionHandlingConfigurer.accessDeniedHandler((HttpServletResponse response,HttpServletRequest request, new AccessDeniedHandler() {
-//
-//                }));
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(handle->handle.accessDeniedHandler(customAccessDeniedHandling));
         return security.build();
     }
 

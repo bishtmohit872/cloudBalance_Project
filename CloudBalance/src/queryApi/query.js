@@ -119,6 +119,6 @@ export const useFetchByAccountId=(accountId)=>{
   return useQuery({
     queryKey:["accountId",accountId],
     queryFn:()=>fetchCostExplorerByAccountId(accountId),
-    enabled:!!accountId
+    enabled: typeof accountId === "number"
   })
 }

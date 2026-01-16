@@ -6,6 +6,7 @@ import com.example.backend.DTO.responseDTO.costExplorerDTO.categoryCost.Category
 import com.example.backend.DTO.responseDTO.costExplorerDTO.categoryCost.MonthlyCategoryDTO;
 import com.example.backend.DTO.responseDTO.costExplorerDTO.monthlyCost.InstanceCostDTO;
 import com.example.backend.DTO.responseDTO.costExplorerDTO.monthlyCost.MonthlyCostDTO;
+import com.example.backend.errorHandling.AccountNotFoundException;
 import com.example.backend.repository.CostExplorerRepository;
 import com.snowflake.snowpark.Row;
 
@@ -27,7 +28,7 @@ public class CostExplorerService {
         for(Row row: rows){
             subOptions.add(row.get(0).toString());
         }
-        System.out.println(subOptions);
+
         return SideFilterSubOption.builder()
                 .sideSubOptions(subOptions).build();
     }
@@ -93,8 +94,7 @@ public class CostExplorerService {
     }
 
     public List<AccountInstanceCostDTO> fetchByAccountId(String accountId){
-        Row[] rows = costExplorerRepository.getByAccountId(accountId);
-        System.out.println(rows);
+        Row[] rows = costExplorerRepository.getByAccountId(accountId).orElseThrow(()->new AccountNotFoundException("No Account Found"));
 
         Map<String,List<InstanceCostDTO>> accountMonthWiseMap = new LinkedHashMap<>();
 

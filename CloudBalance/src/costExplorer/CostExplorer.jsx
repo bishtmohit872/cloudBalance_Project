@@ -13,8 +13,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { setActiveOption, setSwitchAccount } from "../redux/store"
 import Loader from "../components/Loader"
 
-
-
 const CostExplorer = () => {
 
     const [graphIndex, setGraphIndex] = useState(0)
@@ -24,14 +22,15 @@ const CostExplorer = () => {
     const dispatch = useDispatch()
     const option = useSelector(store => store.Options)
     const accountId = useSelector(store => store.switchAccount)
-    
+
     const [category, setCategory] = useState(null)
     const [categoryValue, setCategoryValue] = useState(null)
     const [sideFilterCategory, setSideFilterCategory] = useState([])
     const { data: categoryOutput, isLoading: loading1 } = useFetchCostExplorerCategory(category, categoryValue)
 
-    const { data: costData, isLoading } = useFetchCostExplorerMonthWiseData(option[0][1], categoryValue,accountId);
+    const { data: costData, isLoading } = useFetchCostExplorerMonthWiseData(option[0][1], categoryValue, accountId);
 
+    //Property of Table
     const [xCategory, setXCategory] = useState(null)
     const [groupInstances, setGroupInstances] = useState(null)
     const [sameMonthGroupCost, setSameMonthGroupcost] = useState(null)
@@ -39,9 +38,10 @@ const CostExplorer = () => {
     //FilterSideBar
     const [openSubFilter, setOpenSubFilter] = useState(null)
     const [uniqueSideFilterOptions, setUniqueSideFilterOptions] = useState(null)
-    const [parentKey, setParentKey] = useState([])
+    const [parentKey, setParentKey] = useState("")
     // console.log(parentKey)
     const { data: sideFilterOptions, isLoading: loading } = useFetchCostExplorerColumn(openSubFilter)
+
     const { data: accountData, isLoading: loadingAccount } = useFetchByAccountId(accountId)
 
     useEffect(() => {
@@ -102,12 +102,12 @@ const CostExplorer = () => {
         if (!loadingAccount && accountData) {
             const result = buildInstanceMonthWise(accountData || [])
             const monthLabels = buildMonthWise(accountData || [])
-            const columnCost = buildColumnWiseCost(result||[])
+            const columnCost = buildColumnWiseCost(result || [])
             setGroupInstances(result)
             setXCategory(monthLabels)
             setSameMonthGroupcost(columnCost)
         }
-    }, [loadingAccount,accountData])
+    }, [loadingAccount, accountData])
 
 
     useEffect(() => {
@@ -159,10 +159,6 @@ const CostExplorer = () => {
 
     }, [categoryOutput])
 
-
-
-
-
     useEffect(() => {
         const data = new Set(sideFilterOptions?.sideSubOptions)
         setUniqueSideFilterOptions([...data])
@@ -213,25 +209,30 @@ const CostExplorer = () => {
         }
     }, [costData])
 
-    let subKey = null
-    const handleActiveIndex = (index, subKey) => {
+    const handleActiveIndex = (index, subKey = null) => {
         const options = [...option]
 
         if (subKey == null) {
-            if (index != -1) {
-                [options[0], options[index]] = [options[index], options[0]]
+            if (index !== -1) {
+                [options[0], options[index]] = [options[index], options[0]];
             }
+        } else {
+          
+            const moreIndex = options.findIndex(([key]) => key === "More");
+            if (moreIndex === -1) return;
 
+            const subIndex = options[moreIndex][1].findIndex(([key]) => key === subKey);
+            if (subIndex === -1) return;
+
+            const subOption = options[moreIndex][1][subIndex];
+            const temp = options[0] 
+            options[0] = subOption
+            options[moreIndex][1][subIndex] = temp
         }
-        else if (subKey != null) {
-            const subIndex = options[7][1].findIndex(([key]) => key === subKey);
-            // here above i put semicolor because with semicolor next line consider it as a string and give error at starting of next line
-            [options[0], options[index][1][subIndex]] = [options[index][1][subIndex], options[0]]
 
-        }
+        dispatch(setActiveOption(options));
+    };
 
-        dispatch(setActiveOption(options))
-    }
 
     const handleGraphState = (index) => {
         setGraphIndex(index)
@@ -280,13 +281,21 @@ const CostExplorer = () => {
         if (categoryValue != option) {
             setCategory(value)
             setCategoryValue(option)
-            setParentKey([...parentKey, key])
+            setParentKey(key)
+            setSideFilterCategory(option)
         }
         else if (categoryValue == option) {
             setCategoryValue(null)
+            setParentKey("")
+            setSideFilterCategory("")
         }
-        setSideFilterCategory(prev => prev.includes(option) ? prev.filter(i => i !== option) : [...prev, option])
+        // setSideFilterCategory(prev => prev.includes(option) ? prev.filter(i => i !== option) : [...prev, option])
         // console.log(value,option)
+    }
+
+    const handleReset=()=>{
+        setParentKey("")
+        setSideFilterCategory("")
     }
 
     return (
@@ -412,7 +421,7 @@ const CostExplorer = () => {
                         <div className="flex flex-col justify-start py-2 px-4">
                             <div className="w-full flex items-center justify-between mb-2">
                                 <p className="font-bold text-blue-900 text-sm">Filters</p>
-                                <p className="text-sm">Reset All</p>
+                                <button className="text-sm px-2 py-1 bg-blue-700 text-white font-medium rounded-md" onClick={handleReset}>Reset All</button>
                             </div>
 
                             {
@@ -424,7 +433,7 @@ const CostExplorer = () => {
 
                                                     <div className="h-10 w-full flex items-center justify-between" onClick={() => handleFirstHalf(value)}>
                                                         <div className="h-10 w-max flex items-center justify-between">
-                                                            <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} readOnly/>
+                                                            <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} readOnly />
                                                             <p className="ml-2 text-sm font-medium">{key}</p>
                                                         </div>
                                                         <p className="text-xs text-gray-400 font-medium">Include Only</p>
@@ -435,7 +444,7 @@ const CostExplorer = () => {
                                                         {
                                                             loading ? <Loader /> : uniqueSideFilterOptions?.map((option, index) => (
                                                                 <div key={index} className="w-full flex items-center cursor-pointer" onClick={() => handleSubFilterCall(value, option, key)}>
-                                                                    <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" readOnly/>
+                                                                    <input type="checkbox" checked={sideFilterCategory===option} className="mr-1" readOnly />
                                                                     <p>{option}</p>
                                                                 </div>
                                                             ))
@@ -454,7 +463,7 @@ const CostExplorer = () => {
 
                                                         <div className="h-10 w-full flex items-center justify-between" onClick={() => handleSecondHalf(value)}>
                                                             <div className="h-10 w-max flex items-center justify-start">
-                                                                <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} readOnly/>
+                                                                <input type="checkbox" className="border-2 border-gray-400 cursor-pointer" checked={key === parentKey} readOnly />
                                                                 <p className="ml-2 text-sm font-medium">{key}</p>
                                                             </div>
                                                             <p className="text-xs text-gray-400 font-medium">Include Only</p>
@@ -464,7 +473,7 @@ const CostExplorer = () => {
                                                             {
                                                                 loading ? <Loader /> : uniqueSideFilterOptions?.map((option, index) => (
                                                                     <div key={index} className="w-full flex items-start cursor-pointer" onClick={() => handleSubFilterCall(value, option, key)}>
-                                                                        <input type="checkbox" checked={sideFilterCategory.includes(option)} className="mr-1" readOnly/>
+                                                                        <input type="checkbox" checked={sideFilterCategory==option} className="mr-1" readOnly />
                                                                         <p>{option}</p>
                                                                     </div>
                                                                 ))

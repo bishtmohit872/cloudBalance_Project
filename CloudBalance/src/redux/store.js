@@ -3,16 +3,15 @@ import {composeWithDevTools} from '@redux-devtools/extension'
 
 import { persistStore,persistReducer } from "redux-persist"
 import storage from 'redux-persist/lib/storage'
-import { options } from "fusioncharts";
 
 const initialState = {
   loginUserInfo: {},
   breadCrumbs:["A. Create an IAM Role","B. Add customer Managed Policies","C. create CUR"],
   sideBarState:false,
   Options : [
-  ["Service", "Service"],
+  ["Service", "SERVICE"],
   ["Instance Type", "INSTANCE_TYPE"],
-  ["Account ID", "ACCOUNT_ID"],
+  // ["Account ID", "ACCOUNT_ID"],
   ["Usage Type", "USAGE_TYPE"],
   ["Platform", "PLATFORM"],
   ["Region", "REGION"],
@@ -37,12 +36,16 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case "AddLoginUser":
+      // return {
+      //   ...state,
+      //   loginUserInfo: {
+      //     ...state.loginUserInfo,
+      //     ...action.payload
+      //   }
+      // }
       return {
         ...state,
-        loginUserInfo: {
-          ...state.loginUserInfo,
-          ...action.payload
-        }
+        loginUserInfo: action.payload
       }
     case "RemoveLoginUser":
       return{

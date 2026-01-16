@@ -17,6 +17,7 @@ export const fetchCostExplorerSideOption = async(column)=>{
             column:column
         }
     })
+    console.log(res.data)
     return res.data
 }
 

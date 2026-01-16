@@ -61,7 +61,6 @@ public class UserService {
             oldUser.setEmail(editUserRequestDTO.getEmail()!=null && !editUserRequestDTO.getEmail().isBlank() ? editUserRequestDTO.getEmail() : oldUser.getEmail() );
             oldUser.setRole(editUserRequestDTO.getRole()!=null && !editUserRequestDTO.getRole().isBlank() ? UserEntity.Role.valueOf(editUserRequestDTO.getRole()) : oldUser.getRole());
 
-            System.out.println("UserService:"+editUserRequestDTO.getAddAwsOnboardAccounts().size());
             awsOnboardService.assignAWSAccountToUserAccount(oldUser.getId(), editUserRequestDTO.getAddAwsOnboardAccounts());
 //            if(editUserRequestDTO.getAddAwsOnboardAccounts().size()!=0){
 //            }

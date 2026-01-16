@@ -1,4 +1,4 @@
-const Options={"Service":"Service",
+const Options={"Service":"SERVICE",
                 "Instance Type":"INSTANCE_TYPE",
                 "Account ID":"ACCOUNT_ID",
                 "Usage Type":"USAGE_TYPE",

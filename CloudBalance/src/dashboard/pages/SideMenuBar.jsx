@@ -2,11 +2,13 @@
 import { Link, NavLink } from "react-router-dom"
 import MenuList from "./MenuList"
 import { useSelector } from "react-redux"
+import { decryptData } from "../../utils/Utils"
 
 const SideMenuBar =()=>{
 
     const state = useSelector(store=>store.sideBarState)
-    const loginUser = useSelector(store=>store.loginUserInfo)
+    const loginUser = decryptData(useSelector(store=>store.loginUserInfo))
+    // const loginUser = useSelector(store=>store.loginUserInfo)
 
     return(
         <div className={`h-full ${state?'w-[304px]':'w-[90px]'} relative p-4 transition-all duration-400 bg-white shadow-[4px_0_6px_rgba(0,0,0,0.15)]`}>

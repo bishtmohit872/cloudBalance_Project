@@ -3,14 +3,16 @@ import { useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { changeSideBarState, removeLoginUser, setSwitchAccount } from "../redux/store"
-import { removeToken } from "../utils/Utils"
+import { decryptData, removeToken } from "../utils/Utils"
 import { useFetchAwsOnboardAccountsByUserEmail } from "../queryApi/query"
+import toast from "react-hot-toast"
 
 const Navbar = () =>{
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const loginUser = useSelector((store)=>store.loginUserInfo)
+    const loginUser = decryptData(useSelector((store)=>store.loginUserInfo))
+    // const loginUser = useSelector((store)=>store.loginUserInfo)
     const showAccount = useSelector(store=>store.switchAccount)
     const sideBarState = useSelector(store=>store.sideBarState)
     
@@ -25,6 +27,7 @@ const Navbar = () =>{
         // setLoginStatus(false)
         removeToken()
         dispatch(removeLoginUser())
+        toast.success("Loggout Successfully!")
         navigate("/login")
     }
 
@@ -53,7 +56,7 @@ const Navbar = () =>{
                 
                 {
                     showAccount!=false&&(
-                        <select className="h-10 w-[160px] px-2 ml-9 border border-gray-300 outline-none focus:outline-none text-sm rounded-md" onClick={(e)=>handleSelectAccount(e.target.value)}>
+                        <select className="h-10 w-40 px-2 ml-9 border border-gray-300 outline-none focus:outline-none text-sm rounded-md" onClick={(e)=>handleSelectAccount(e.target.value)}>
                             <option>Assigned Accounts</option>
                             {
                                 data?.map((account,index)=>(
@@ -72,13 +75,15 @@ const Navbar = () =>{
                     <div className="w-40 text-sm ml-4">
                         <p className="text-[#499FDC] font-bold">Welcome</p>
                         <p className="pr-2 inline capitalize font-semibold text-gray-700 border-r">{loginUser?.firstName+" "+loginUser?.lastName}</p>
-                        <span className="ml-2 text-xs text-blue-900 uppercase font-medium">{loginUser?.role}</span>
+                        <span className="ml-2 text-xs text-blue-900 font-medium capitalize">{loginUser?.role}</span>
                     </div>
                 </div>
 
                 <div className="flex items-center ml-2 justify-evenly rounded-md">
-                    <img className="size-8" src="/assets/logout.png" alt="logout"/>
-                    <button className="ml-2 px-4 py-2 outline-none bg-[#499FDC] text-white rounded-md cursor-pointer hover:bg-blue-500" onClick={handleLogout}>Logout</button>
+                    <button className="ml-2 px-2 py-2 outline-none bg-[#499FDC] text-white rounded-md cursor-pointer flex items-center hover:bg-blue-500" onClick={handleLogout}>
+                        <img className="size-5 mr-2 invert" src="/assets/logout.png" alt="logout"/>
+                        <span className="text-md">Logout</span>
+                    </button>
                 </div>
             </div>
 

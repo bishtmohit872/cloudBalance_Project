@@ -10,6 +10,7 @@ import { CiFilter } from "react-icons/ci";
 
 import { tableHeader, tableBody } from "./tableConfig/config"
 import Loader from "../../../components/Loader"
+import { decryptData } from "../../../utils/Utils"
 
 const UserList = () => {
 
@@ -20,7 +21,8 @@ const UserList = () => {
 
     let { data,isLoading } = useUsers();
     
-    const userId = useSelector(store => store?.loginUserInfo?.id)
+    const userDetail = decryptData(useSelector(store => store?.loginUserInfo))
+    // const userDetail = useSelector(store => store?.loginUserInfo)
 
     useEffect(()=>{
         if(data){
@@ -63,7 +65,7 @@ const UserList = () => {
                 (<>
                     <div className="w-full flex items-end justify-between">
                         <p className="text-blue-950 font-extrabold text-2xl">Users List</p>
-                        <button to="addUser" onClick={() => handleAdd("add")} className="py-2 px-3 bg-blue-950 text-white rounded-lg flex items-center justify-center hover:bg-blue-900 cursor-pointer">
+                        <button to="addUser" onClick={() => handleAdd("add")} className={`py-2 px-3 bg-blue-950 text-white rounded-lg flex items-center justify-center hover:bg-blue-900 cursor-pointer`}>
                             <span className="mr-2"><IoPersonAddOutline /></span>
                             <p>Add User</p>
                         </button>
@@ -89,7 +91,7 @@ const UserList = () => {
                         </thead>
                         <tbody>
                             {
-                                userList?.map((user, index) => (userId !== user.id) ? (
+                                userList?.map((user, index) => (userDetail?.id !== user.id) ? (
                                     <tr key={index} className={`px-0 py-2 text-blue-950 hover:bg-[#225172] hover:text-white ${index % 2 != 0 ? 'bg-gray-100' : ""}`}>
                                         {
                                             tableBody.map((data, index) => (

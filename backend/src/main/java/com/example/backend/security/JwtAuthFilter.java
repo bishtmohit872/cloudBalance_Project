@@ -39,16 +39,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try{
             log.info("incoming request:{}",request.getRequestURI());
 
-           if(request.getServletPath().equals("/snow")){
-                filterChain.doFilter(request,response);
+//           if(request.getServletPath().equals("/snow")){
+//                filterChain.doFilter(request,response);
+//                return;
+//            }
+            String path = request.getServletPath();
+
+            if (path.startsWith("/auth")) {
+                filterChain.doFilter(request, response);
                 return;
             }
+
             final String requestTokenHeader = request.getHeader("Authorization");
 
-
             if((requestTokenHeader==null) || (!requestTokenHeader.startsWith("Bearer "))){
-                filterChain.doFilter(request,response);
-                return;
+                throw new RuntimeException("No Access Token Found");
             }
 
             String token = requestTokenHeader.split("Bearer ")[1];

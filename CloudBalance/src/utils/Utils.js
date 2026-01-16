@@ -1,3 +1,5 @@
+import CryptoJS from "crypto-js";
+
 export const setToken = (token)=>{
     localStorage.setItem('token',token)
 }
@@ -59,4 +61,31 @@ export const deepFromEntries=(entries)=>{
 
 
 
+
+const SECRET_KEY = "frontend-secret-key-123"; 
+
+export const encryptData = (data) => {
+    return CryptoJS.AES.encrypt(
+        JSON.stringify(data),
+        SECRET_KEY
+    ).toString();
+};
+
+
+
+export const decryptData = (cipherText) => {
+    if (!cipherText) return null
+
+    try {
+        const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
+        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+
+        if (!decryptedText) return null
+
+        return JSON.parse(decryptedText)
+    } catch (error) {
+        console.error("Failed to decrypt or parse JSON:", error);
+        return null
+    }
+};
 

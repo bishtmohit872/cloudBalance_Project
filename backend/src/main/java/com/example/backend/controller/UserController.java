@@ -60,22 +60,22 @@ public class UserController {
         return new ResponseEntity<>(userService.editUserDetails(editUserRequestDTO,userId),HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteUserById(@PathVariable(name="id") Long Id){
-        map.clear();
-        map.put("status",true);
-        userService.deleteUserById(Id);
-        return ResponseEntity.status(HttpStatus.OK).body(map);
-    }
-
-
-    @DeleteMapping("/delete/all")
-    public ResponseEntity<Object> deleteAll(){
-        map.clear();
-        map.put("status",true);
-        userService.deleteAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(map);
-    }
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<Object> deleteUserById(@PathVariable(name="id") Long Id){
+//        map.clear();
+//        map.put("status",true);
+//        userService.deleteUserById(Id);
+//        return ResponseEntity.status(HttpStatus.OK).body(map);
+//    }
+//
+//
+//    @DeleteMapping("/delete/all")
+//    public ResponseEntity<Object> deleteAll(){
+//        map.clear();
+//        map.put("status",true);
+//        userService.deleteAllUsers();
+//        return ResponseEntity.status(HttpStatus.OK).body(map);
+//    }
 
 
 }
